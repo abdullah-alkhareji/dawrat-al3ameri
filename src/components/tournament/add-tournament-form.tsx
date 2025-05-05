@@ -15,6 +15,9 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Input } from "../ui/input";
 import { DatePicker } from "../ui/date-picker";
 import { Button } from "../ui/button";
+import { useRouter } from "next/navigation";
+import { toast } from "sonner";
+import { createTournament } from "@/actions/tournament";
 
 const addTournamentSchema = z.object({
   name: z.string().min(1, { message: "اسم البطولة مطلوب" }),
@@ -25,7 +28,12 @@ const addTournamentSchema = z.object({
   location: z.string(),
 });
 
-const AddTournamentForm = () => {
+interface AddTournamentFormProps {
+  onSuccess?: () => void;
+}
+
+const AddTournamentForm = ({ onSuccess }: AddTournamentFormProps) => {
+  const router = useRouter();
   const form = useForm<z.infer<typeof addTournamentSchema>>({
     resolver: zodResolver(addTournamentSchema),
     defaultValues: {
@@ -38,8 +46,24 @@ const AddTournamentForm = () => {
     },
   });
 
-  const onSubmit = (values: z.infer<typeof addTournamentSchema>) => {
-    console.log(values);
+  const onSubmit = async (values: z.infer<typeof addTournamentSchema>) => {
+    try {
+      const result = await createTournament(values);
+
+      if (!result.success) {
+        throw new Error(result.error);
+      }
+
+      toast.success("تم إنشاء البطولة بنجاح");
+      form.reset();
+      router.refresh();
+
+      // Call onSuccess callback if provided
+      onSuccess?.();
+    } catch (error) {
+      console.error(error);
+      toast.error("حدث خطأ أثناء إنشاء البطولة");
+    }
   };
 
   return (
@@ -66,7 +90,12 @@ const AddTournamentForm = () => {
             <FormItem>
               <FormLabel>عدد الفرق</FormLabel>
               <FormControl>
-                <Input type="tel" min={2} {...field} />
+                <Input
+                  type="number"
+                  min={2}
+                  {...field}
+                  onChange={(e) => field.onChange(parseInt(e.target.value))}
+                />
               </FormControl>
               <FormMessage />
             </FormItem>

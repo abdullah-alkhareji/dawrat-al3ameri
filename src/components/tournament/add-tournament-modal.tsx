@@ -1,3 +1,5 @@
+"use client";
+
 import React from "react";
 import {
   ModalTrigger,
@@ -11,8 +13,10 @@ import { Plus } from "lucide-react";
 import AddTournamentForm from "./add-tournament-form";
 
 const AddTournamentModal = () => {
+  const [open, setOpen] = React.useState(false);
+
   return (
-    <Modal>
+    <Modal open={open} onOpenChange={setOpen}>
       <ModalTrigger asChild>
         <Button className="font-bold">
           <Plus className="size-4" />
@@ -23,7 +27,7 @@ const AddTournamentModal = () => {
         <ModalHeader>
           <ModalTitle>اضافه بطولة</ModalTitle>
         </ModalHeader>
-        <AddTournamentForm />
+        <AddTournamentForm onSuccess={() => setOpen(false)} />
       </ModalContent>
     </Modal>
   );
