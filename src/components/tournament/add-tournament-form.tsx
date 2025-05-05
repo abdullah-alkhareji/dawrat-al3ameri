@@ -54,7 +54,7 @@ const AddTournamentForm = ({ onSuccess }: AddTournamentFormProps) => {
         throw new Error(result.error);
       }
 
-      toast.success("تم إنشاء البطولة بنجاح");
+      toast.success("تمام👌");
       form.reset();
       router.refresh();
 
@@ -62,7 +62,7 @@ const AddTournamentForm = ({ onSuccess }: AddTournamentFormProps) => {
       onSuccess?.();
     } catch (error) {
       console.error(error);
-      toast.error("حدث خطأ أثناء إنشاء البطولة");
+      toast.error("ما ضبطت");
     }
   };
 
@@ -107,7 +107,7 @@ const AddTournamentForm = ({ onSuccess }: AddTournamentFormProps) => {
           name="startDate"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>تاريخ البدء</FormLabel>
+              <FormLabel>تبلش</FormLabel>
               <FormControl>
                 <DatePicker date={field.value} onDateChange={field.onChange} />
               </FormControl>
@@ -121,7 +121,7 @@ const AddTournamentForm = ({ onSuccess }: AddTournamentFormProps) => {
           name="endDate"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>تاريخ الانتهاء</FormLabel>
+              <FormLabel>لي</FormLabel>
               <FormControl>
                 <DatePicker
                   date={field.value}
@@ -140,7 +140,7 @@ const AddTournamentForm = ({ onSuccess }: AddTournamentFormProps) => {
           name="lastRegDate"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>تاريخ التسجيل النهائي</FormLabel>
+              <FormLabel>اخر يوم تسجيل</FormLabel>
               <FormControl>
                 <DatePicker
                   date={field.value}
@@ -159,7 +159,7 @@ const AddTournamentForm = ({ onSuccess }: AddTournamentFormProps) => {
           name="location"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>الموقع</FormLabel>
+              <FormLabel>المكان</FormLabel>
               <FormControl>
                 <Input {...field} />
               </FormControl>
@@ -169,7 +169,7 @@ const AddTournamentForm = ({ onSuccess }: AddTournamentFormProps) => {
         />
 
         <Button type="submit" className="w-full">
-          اضافة بطولة
+          ضيف
         </Button>
       </form>
     </Form>

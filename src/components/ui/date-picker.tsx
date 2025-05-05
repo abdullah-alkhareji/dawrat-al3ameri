@@ -23,7 +23,7 @@ export function DatePicker({
   date,
   onDateChange,
   className,
-  placeholder = "اختر التاريخ",
+  placeholder = "اختار التاريخ",
   disabled = false,
   fromDate,
   toDate,
