@@ -14,4 +14,13 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+model Tournament {
+  id         String   @id @default(cuid())
+  name       String
+  teamCount  Int
+  location   String?
+  startDate  DateTime
+  endDate    DateTime
+  createdAt  DateTime @default(now())
+}
 
