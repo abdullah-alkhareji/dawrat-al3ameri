@@ -21,6 +21,7 @@ model Tournament {
   location   String?
   startDate  DateTime
   endDate    DateTime
+  lastRegDate DateTime
   createdAt  DateTime @default(now())
 }
 
