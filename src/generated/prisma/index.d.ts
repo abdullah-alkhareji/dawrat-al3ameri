@@ -896,6 +896,7 @@ export namespace Prisma {
     location: string | null
     startDate: Date | null
     endDate: Date | null
+    lastRegDate: Date | null
     createdAt: Date | null
   }
 
@@ -906,6 +907,7 @@ export namespace Prisma {
     location: string | null
     startDate: Date | null
     endDate: Date | null
+    lastRegDate: Date | null
     createdAt: Date | null
   }
 
@@ -916,6 +918,7 @@ export namespace Prisma {
     location: number
     startDate: number
     endDate: number
+    lastRegDate: number
     createdAt: number
     _all: number
   }
@@ -936,6 +939,7 @@ export namespace Prisma {
     location?: true
     startDate?: true
     endDate?: true
+    lastRegDate?: true
     createdAt?: true
   }
 
@@ -946,6 +950,7 @@ export namespace Prisma {
     location?: true
     startDate?: true
     endDate?: true
+    lastRegDate?: true
     createdAt?: true
   }
 
@@ -956,6 +961,7 @@ export namespace Prisma {
     location?: true
     startDate?: true
     endDate?: true
+    lastRegDate?: true
     createdAt?: true
     _all?: true
   }
@@ -1053,6 +1059,7 @@ export namespace Prisma {
     location: string | null
     startDate: Date
     endDate: Date
+    lastRegDate: Date
     createdAt: Date
     _count: TournamentCountAggregateOutputType | null
     _avg: TournamentAvgAggregateOutputType | null
@@ -1082,6 +1089,7 @@ export namespace Prisma {
     location?: boolean
     startDate?: boolean
     endDate?: boolean
+    lastRegDate?: boolean
     createdAt?: boolean
   }, ExtArgs["result"]["tournament"]>
 
@@ -1092,6 +1100,7 @@ export namespace Prisma {
     location?: boolean
     startDate?: boolean
     endDate?: boolean
+    lastRegDate?: boolean
     createdAt?: boolean
   }, ExtArgs["result"]["tournament"]>
 
@@ -1102,6 +1111,7 @@ export namespace Prisma {
     location?: boolean
     startDate?: boolean
     endDate?: boolean
+    lastRegDate?: boolean
     createdAt?: boolean
   }, ExtArgs["result"]["tournament"]>
 
@@ -1112,10 +1122,11 @@ export namespace Prisma {
     location?: boolean
     startDate?: boolean
     endDate?: boolean
+    lastRegDate?: boolean
     createdAt?: boolean
   }
 
-  export type TournamentOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "teamCount" | "location" | "startDate" | "endDate" | "createdAt", ExtArgs["result"]["tournament"]>
+  export type TournamentOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "teamCount" | "location" | "startDate" | "endDate" | "lastRegDate" | "createdAt", ExtArgs["result"]["tournament"]>
 
   export type $TournamentPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "Tournament"
@@ -1127,6 +1138,7 @@ export namespace Prisma {
       location: string | null
       startDate: Date
       endDate: Date
+      lastRegDate: Date
       createdAt: Date
     }, ExtArgs["result"]["tournament"]>
     composites: {}
@@ -1557,6 +1569,7 @@ export namespace Prisma {
     readonly location: FieldRef<"Tournament", 'String'>
     readonly startDate: FieldRef<"Tournament", 'DateTime'>
     readonly endDate: FieldRef<"Tournament", 'DateTime'>
+    readonly lastRegDate: FieldRef<"Tournament", 'DateTime'>
     readonly createdAt: FieldRef<"Tournament", 'DateTime'>
   }
     
@@ -1945,6 +1958,7 @@ export namespace Prisma {
     location: 'location',
     startDate: 'startDate',
     endDate: 'endDate',
+    lastRegDate: 'lastRegDate',
     createdAt: 'createdAt'
   };
 
@@ -2049,6 +2063,7 @@ export namespace Prisma {
     location?: StringNullableFilter<"Tournament"> | string | null
     startDate?: DateTimeFilter<"Tournament"> | Date | string
     endDate?: DateTimeFilter<"Tournament"> | Date | string
+    lastRegDate?: DateTimeFilter<"Tournament"> | Date | string
     createdAt?: DateTimeFilter<"Tournament"> | Date | string
   }
 
@@ -2059,6 +2074,7 @@ export namespace Prisma {
     location?: SortOrderInput | SortOrder
     startDate?: SortOrder
     endDate?: SortOrder
+    lastRegDate?: SortOrder
     createdAt?: SortOrder
   }
 
@@ -2072,6 +2088,7 @@ export namespace Prisma {
     location?: StringNullableFilter<"Tournament"> | string | null
     startDate?: DateTimeFilter<"Tournament"> | Date | string
     endDate?: DateTimeFilter<"Tournament"> | Date | string
+    lastRegDate?: DateTimeFilter<"Tournament"> | Date | string
     createdAt?: DateTimeFilter<"Tournament"> | Date | string
   }, "id">
 
@@ -2082,6 +2099,7 @@ export namespace Prisma {
     location?: SortOrderInput | SortOrder
     startDate?: SortOrder
     endDate?: SortOrder
+    lastRegDate?: SortOrder
     createdAt?: SortOrder
     _count?: TournamentCountOrderByAggregateInput
     _avg?: TournamentAvgOrderByAggregateInput
@@ -2100,6 +2118,7 @@ export namespace Prisma {
     location?: StringNullableWithAggregatesFilter<"Tournament"> | string | null
     startDate?: DateTimeWithAggregatesFilter<"Tournament"> | Date | string
     endDate?: DateTimeWithAggregatesFilter<"Tournament"> | Date | string
+    lastRegDate?: DateTimeWithAggregatesFilter<"Tournament"> | Date | string
     createdAt?: DateTimeWithAggregatesFilter<"Tournament"> | Date | string
   }
 
@@ -2110,6 +2129,7 @@ export namespace Prisma {
     location?: string | null
     startDate: Date | string
     endDate: Date | string
+    lastRegDate: Date | string
     createdAt?: Date | string
   }
 
@@ -2120,6 +2140,7 @@ export namespace Prisma {
     location?: string | null
     startDate: Date | string
     endDate: Date | string
+    lastRegDate: Date | string
     createdAt?: Date | string
   }
 
@@ -2130,6 +2151,7 @@ export namespace Prisma {
     location?: NullableStringFieldUpdateOperationsInput | string | null
     startDate?: DateTimeFieldUpdateOperationsInput | Date | string
     endDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    lastRegDate?: DateTimeFieldUpdateOperationsInput | Date | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
@@ -2140,6 +2162,7 @@ export namespace Prisma {
     location?: NullableStringFieldUpdateOperationsInput | string | null
     startDate?: DateTimeFieldUpdateOperationsInput | Date | string
     endDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    lastRegDate?: DateTimeFieldUpdateOperationsInput | Date | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
@@ -2150,6 +2173,7 @@ export namespace Prisma {
     location?: string | null
     startDate: Date | string
     endDate: Date | string
+    lastRegDate: Date | string
     createdAt?: Date | string
   }
 
@@ -2160,6 +2184,7 @@ export namespace Prisma {
     location?: NullableStringFieldUpdateOperationsInput | string | null
     startDate?: DateTimeFieldUpdateOperationsInput | Date | string
     endDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    lastRegDate?: DateTimeFieldUpdateOperationsInput | Date | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
@@ -2170,6 +2195,7 @@ export namespace Prisma {
     location?: NullableStringFieldUpdateOperationsInput | string | null
     startDate?: DateTimeFieldUpdateOperationsInput | Date | string
     endDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    lastRegDate?: DateTimeFieldUpdateOperationsInput | Date | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
@@ -2237,6 +2263,7 @@ export namespace Prisma {
     location?: SortOrder
     startDate?: SortOrder
     endDate?: SortOrder
+    lastRegDate?: SortOrder
     createdAt?: SortOrder
   }
 
@@ -2251,6 +2278,7 @@ export namespace Prisma {
     location?: SortOrder
     startDate?: SortOrder
     endDate?: SortOrder
+    lastRegDate?: SortOrder
     createdAt?: SortOrder
   }
 
@@ -2261,6 +2289,7 @@ export namespace Prisma {
     location?: SortOrder
     startDate?: SortOrder
     endDate?: SortOrder
+    lastRegDate?: SortOrder
     createdAt?: SortOrder
   }
 

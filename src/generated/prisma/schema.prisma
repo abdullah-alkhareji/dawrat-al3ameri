@@ -15,11 +15,12 @@ datasource db {
 }
 
 model Tournament {
-  id        String   @id @default(cuid())
-  name      String
-  teamCount Int
-  location  String?
-  startDate DateTime
-  endDate   DateTime
-  createdAt DateTime @default(now())
+  id          String   @id @default(cuid())
+  name        String
+  teamCount   Int
+  location    String?
+  startDate   DateTime
+  endDate     DateTime
+  lastRegDate DateTime
+  createdAt   DateTime @default(now())
 }

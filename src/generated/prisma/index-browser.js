@@ -127,6 +127,7 @@ exports.Prisma.TournamentScalarFieldEnum = {
   location: 'location',
   startDate: 'startDate',
   endDate: 'endDate',
+  lastRegDate: 'lastRegDate',
   createdAt: 'createdAt'
 };
 
