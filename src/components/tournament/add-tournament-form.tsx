@@ -62,7 +62,7 @@ const AddTournamentForm = ({ onSuccess }: AddTournamentFormProps) => {
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
           <div className="col-span-1 p-4 border rounded-md">
             <FormField
               control={form.control}
@@ -184,7 +184,7 @@ const AddTournamentForm = ({ onSuccess }: AddTournamentFormProps) => {
               )}
             />
           </div>
-          <div className="col-span-1 md:col-span-2">
+          <div className="col-span-1 ">
             <Button type="submit" className="w-full">
               ضيف
             </Button>

@@ -30,3 +30,13 @@ export async function createTournament(data: {
     return { success: false, error: "Failed to create tournament" };
   }
 }
+
+export async function getTournaments() {
+  try {
+    const tournaments = await prisma.tournament.findMany();
+    return { success: true, data: tournaments };
+  } catch (error) {
+    console.error("[TOURNAMENT_GET]", error);
+    return { success: false, error: "Failed to get tournaments" };
+  }
+}
