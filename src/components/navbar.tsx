@@ -1,13 +1,18 @@
 import React from "react";
 import ModeToggle from "./mode-toggle";
+
 const Navbar = () => {
   return (
-    <div className="flex justify-between items-center p-4 bg-card">
-      <h1 className="text-2xl font-bold">
-        دورة <span className="text-primary font-black">العميري</span>
-      </h1>
-      <ModeToggle />
-    </div>
+    <header className="sticky top-0 z-50 w-full bg-card border-b px-4">
+      <div className="container flex h-14 items-center mx-auto ">
+        <h1 className="text-2xl font-bold tracking-tight">
+          دورة <span className="text-primary font-black">العميري</span>
+        </h1>
+        <div className="flex flex-1 items-center justify-end">
+          <ModeToggle />
+        </div>
+      </div>
+    </header>
   );
 };
 
