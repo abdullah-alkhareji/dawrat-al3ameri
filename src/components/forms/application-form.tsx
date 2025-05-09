@@ -8,7 +8,6 @@ import { z } from "zod";
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -16,38 +15,61 @@ import {
 } from "../ui/form";
 import { Input } from "../ui/input";
 import { Button } from "../ui/button";
+import { createTeam } from "@/actions/teams";
+import { toast } from "sonner";
+import { useRouter } from "next/navigation";
 
-const ApplicationForm = ({ teamsCount }: { teamsCount: number }) => {
+const ApplicationForm = ({
+  teamsCount,
+  tournamentId,
+}: {
+  teamsCount: number;
+  tournamentId: string;
+}) => {
+  const router = useRouter();
+
   const form = useForm<z.infer<typeof applicationFormSchema>>({
     resolver: zodResolver(applicationFormSchema),
     defaultValues: {
       teamNumber: teamsCount + 1,
       name1: "",
       name2: "",
-      civilId1: 0,
-      civilId2: 0,
-      phone1: 0,
-      phone2: 0,
+      civilId1: "",
+      civilId2: "",
+      phone1: "",
+      phone2: "",
     },
   });
 
   const onSubmit = async (values: z.infer<typeof applicationFormSchema>) => {
-    console.log(values);
+    try {
+      const result = await createTeam(values, tournamentId);
+
+      if (!result.success) {
+        throw new Error(result.error);
+      }
+
+      toast.success("تم إنشاء الفريق بنجاح");
+      form.reset();
+      router.push(`/review?id=${result.data?.id}`);
+    } catch (error) {
+      toast.error("حدث خطأ");
+      console.log(error);
+    }
   };
 
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
           {/* Player 1 Fields */}
-          <div className="col-span-1 p-4 border rounded-md flex flex-col gap-4">
+          <div className="col-span-1 p-4 border rounded-md flex flex-col gap-8">
             <FormField
               control={form.control}
               name="name1"
               render={({ field }) => (
-                <FormItem>
-                  <FormLabel>الاسم الثلاثي</FormLabel>
-                  <FormDescription>اللاعب الاول</FormDescription>
+                <FormItem className="space-y-2">
+                  <FormLabel>الاسم الثلاثي لللاعب الاول</FormLabel>
                   <FormControl>
                     <Input type="text" {...field} />
                   </FormControl>
@@ -59,11 +81,16 @@ const ApplicationForm = ({ teamsCount }: { teamsCount: number }) => {
               control={form.control}
               name="civilId1"
               render={({ field }) => (
-                <FormItem>
-                  <FormLabel>الرقم المدني</FormLabel>
-                  <FormDescription>اللاعب الاول</FormDescription>
+                <FormItem className="space-y-2">
+                  <FormLabel>الرقم المدني لللاعب الاول</FormLabel>
                   <FormControl>
-                    <Input type="number" {...field} />
+                    <Input
+                      type="tel"
+                      {...field}
+                      onChange={(e) => {
+                        field.onChange(e.target.value.replace(/\D/g, ""));
+                      }}
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -73,11 +100,16 @@ const ApplicationForm = ({ teamsCount }: { teamsCount: number }) => {
               control={form.control}
               name="phone1"
               render={({ field }) => (
-                <FormItem>
-                  <FormLabel>رقم التلفون</FormLabel>
-                  <FormDescription>اللاعب الاول</FormDescription>
+                <FormItem className="space-y-2">
+                  <FormLabel>رقم التلفون لللاعب الاول</FormLabel>
                   <FormControl>
-                    <Input type="number" {...field} />
+                    <Input
+                      type="tel"
+                      {...field}
+                      onChange={(e) => {
+                        field.onChange(e.target.value.replace(/\D/g, ""));
+                      }}
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -85,14 +117,13 @@ const ApplicationForm = ({ teamsCount }: { teamsCount: number }) => {
             />
           </div>
           {/* Player 2 Fields */}
-          <div className="col-span-1 p-4 border rounded-md flex flex-col gap-4">
+          <div className="col-span-1 p-4 border rounded-md flex flex-col gap-8">
             <FormField
               control={form.control}
               name="name2"
               render={({ field }) => (
-                <FormItem>
-                  <FormLabel>الاسم الثلاثي</FormLabel>
-                  <FormDescription>اللاعب الثاني</FormDescription>
+                <FormItem className="space-y-2">
+                  <FormLabel>الاسم الثلاثي لللاعب الثاني</FormLabel>
                   <FormControl>
                     <Input type="text" {...field} />
                   </FormControl>
@@ -104,11 +135,16 @@ const ApplicationForm = ({ teamsCount }: { teamsCount: number }) => {
               control={form.control}
               name="civilId2"
               render={({ field }) => (
-                <FormItem>
-                  <FormLabel>الرقم المدني</FormLabel>
-                  <FormDescription>اللاعب الثاني</FormDescription>
+                <FormItem className="space-y-2">
+                  <FormLabel>الرقم المدني لللاعب الثاني</FormLabel>
                   <FormControl>
-                    <Input type="number" {...field} />
+                    <Input
+                      type="tel"
+                      {...field}
+                      onChange={(e) => {
+                        field.onChange(e.target.value.replace(/\D/g, ""));
+                      }}
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -118,19 +154,22 @@ const ApplicationForm = ({ teamsCount }: { teamsCount: number }) => {
               control={form.control}
               name="phone2"
               render={({ field }) => (
-                <FormItem>
-                  <FormLabel>رقم التلفون</FormLabel>
-                  <FormDescription>اللاعب الثاني</FormDescription>
+                <FormItem className="space-y-2">
+                  <FormLabel>رقم التلفون لللاعب الثاني</FormLabel>
                   <FormControl>
-                    <Input type="number" {...field} />
+                    <Input
+                      type="tel"
+                      {...field}
+                      onChange={(e) => {
+                        field.onChange(e.target.value.replace(/\D/g, ""));
+                      }}
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
               )}
             />
           </div>
-          {/* Empty div for grid alignment on desktop */}
-          <div className="col-span-1"></div>
           {/* Submit Button */}
           <Button type="submit" className="col-span-1 lg:col-span-3">
             تسجيل

@@ -2147,18 +2147,10 @@ export namespace Prisma {
 
   export type TeamAvgAggregateOutputType = {
     teamNumber: number | null
-    civilId1: number | null
-    civilId2: number | null
-    phone1: number | null
-    phone2: number | null
   }
 
   export type TeamSumAggregateOutputType = {
     teamNumber: number | null
-    civilId1: number | null
-    civilId2: number | null
-    phone1: number | null
-    phone2: number | null
   }
 
   export type TeamMinAggregateOutputType = {
@@ -2167,10 +2159,10 @@ export namespace Prisma {
     tournamentId: string | null
     name1: string | null
     name2: string | null
-    civilId1: number | null
-    civilId2: number | null
-    phone1: number | null
-    phone2: number | null
+    civilId1: string | null
+    civilId2: string | null
+    phone1: string | null
+    phone2: string | null
     createdAt: Date | null
   }
 
@@ -2180,10 +2172,10 @@ export namespace Prisma {
     tournamentId: string | null
     name1: string | null
     name2: string | null
-    civilId1: number | null
-    civilId2: number | null
-    phone1: number | null
-    phone2: number | null
+    civilId1: string | null
+    civilId2: string | null
+    phone1: string | null
+    phone2: string | null
     createdAt: Date | null
   }
 
@@ -2204,18 +2196,10 @@ export namespace Prisma {
 
   export type TeamAvgAggregateInputType = {
     teamNumber?: true
-    civilId1?: true
-    civilId2?: true
-    phone1?: true
-    phone2?: true
   }
 
   export type TeamSumAggregateInputType = {
     teamNumber?: true
-    civilId1?: true
-    civilId2?: true
-    phone1?: true
-    phone2?: true
   }
 
   export type TeamMinAggregateInputType = {
@@ -2350,10 +2334,10 @@ export namespace Prisma {
     tournamentId: string
     name1: string
     name2: string
-    civilId1: number
-    civilId2: number
-    phone1: number
-    phone2: number
+    civilId1: string
+    civilId2: string
+    phone1: string
+    phone2: string
     createdAt: Date
     _count: TeamCountAggregateOutputType | null
     _avg: TeamAvgAggregateOutputType | null
@@ -2453,10 +2437,10 @@ export namespace Prisma {
       tournamentId: string
       name1: string
       name2: string
-      civilId1: number
-      civilId2: number
-      phone1: number
-      phone2: number
+      civilId1: string
+      civilId2: string
+      phone1: string
+      phone2: string
       createdAt: Date
     }, ExtArgs["result"]["team"]>
     composites: {}
@@ -2887,10 +2871,10 @@ export namespace Prisma {
     readonly tournamentId: FieldRef<"Team", 'String'>
     readonly name1: FieldRef<"Team", 'String'>
     readonly name2: FieldRef<"Team", 'String'>
-    readonly civilId1: FieldRef<"Team", 'Int'>
-    readonly civilId2: FieldRef<"Team", 'Int'>
-    readonly phone1: FieldRef<"Team", 'Int'>
-    readonly phone2: FieldRef<"Team", 'Int'>
+    readonly civilId1: FieldRef<"Team", 'String'>
+    readonly civilId2: FieldRef<"Team", 'String'>
+    readonly phone1: FieldRef<"Team", 'String'>
+    readonly phone2: FieldRef<"Team", 'String'>
     readonly createdAt: FieldRef<"Team", 'DateTime'>
   }
     
@@ -3519,10 +3503,10 @@ export namespace Prisma {
     tournamentId?: StringFilter<"Team"> | string
     name1?: StringFilter<"Team"> | string
     name2?: StringFilter<"Team"> | string
-    civilId1?: IntFilter<"Team"> | number
-    civilId2?: IntFilter<"Team"> | number
-    phone1?: IntFilter<"Team"> | number
-    phone2?: IntFilter<"Team"> | number
+    civilId1?: StringFilter<"Team"> | string
+    civilId2?: StringFilter<"Team"> | string
+    phone1?: StringFilter<"Team"> | string
+    phone2?: StringFilter<"Team"> | string
     createdAt?: DateTimeFilter<"Team"> | Date | string
     tournament?: XOR<TournamentScalarRelationFilter, TournamentWhereInput>
   }
@@ -3551,10 +3535,10 @@ export namespace Prisma {
     tournamentId?: StringFilter<"Team"> | string
     name1?: StringFilter<"Team"> | string
     name2?: StringFilter<"Team"> | string
-    civilId1?: IntFilter<"Team"> | number
-    civilId2?: IntFilter<"Team"> | number
-    phone1?: IntFilter<"Team"> | number
-    phone2?: IntFilter<"Team"> | number
+    civilId1?: StringFilter<"Team"> | string
+    civilId2?: StringFilter<"Team"> | string
+    phone1?: StringFilter<"Team"> | string
+    phone2?: StringFilter<"Team"> | string
     createdAt?: DateTimeFilter<"Team"> | Date | string
     tournament?: XOR<TournamentScalarRelationFilter, TournamentWhereInput>
   }, "id" | "tournamentId_civilId1_civilId2">
@@ -3586,10 +3570,10 @@ export namespace Prisma {
     tournamentId?: StringWithAggregatesFilter<"Team"> | string
     name1?: StringWithAggregatesFilter<"Team"> | string
     name2?: StringWithAggregatesFilter<"Team"> | string
-    civilId1?: IntWithAggregatesFilter<"Team"> | number
-    civilId2?: IntWithAggregatesFilter<"Team"> | number
-    phone1?: IntWithAggregatesFilter<"Team"> | number
-    phone2?: IntWithAggregatesFilter<"Team"> | number
+    civilId1?: StringWithAggregatesFilter<"Team"> | string
+    civilId2?: StringWithAggregatesFilter<"Team"> | string
+    phone1?: StringWithAggregatesFilter<"Team"> | string
+    phone2?: StringWithAggregatesFilter<"Team"> | string
     createdAt?: DateTimeWithAggregatesFilter<"Team"> | Date | string
   }
 
@@ -3679,10 +3663,10 @@ export namespace Prisma {
     teamNumber: number
     name1: string
     name2: string
-    civilId1: number
-    civilId2: number
-    phone1: number
-    phone2: number
+    civilId1: string
+    civilId2: string
+    phone1: string
+    phone2: string
     createdAt?: Date | string
     tournament: TournamentCreateNestedOneWithoutTeamsInput
   }
@@ -3693,10 +3677,10 @@ export namespace Prisma {
     tournamentId: string
     name1: string
     name2: string
-    civilId1: number
-    civilId2: number
-    phone1: number
-    phone2: number
+    civilId1: string
+    civilId2: string
+    phone1: string
+    phone2: string
     createdAt?: Date | string
   }
 
@@ -3705,10 +3689,10 @@ export namespace Prisma {
     teamNumber?: IntFieldUpdateOperationsInput | number
     name1?: StringFieldUpdateOperationsInput | string
     name2?: StringFieldUpdateOperationsInput | string
-    civilId1?: IntFieldUpdateOperationsInput | number
-    civilId2?: IntFieldUpdateOperationsInput | number
-    phone1?: IntFieldUpdateOperationsInput | number
-    phone2?: IntFieldUpdateOperationsInput | number
+    civilId1?: StringFieldUpdateOperationsInput | string
+    civilId2?: StringFieldUpdateOperationsInput | string
+    phone1?: StringFieldUpdateOperationsInput | string
+    phone2?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     tournament?: TournamentUpdateOneRequiredWithoutTeamsNestedInput
   }
@@ -3719,10 +3703,10 @@ export namespace Prisma {
     tournamentId?: StringFieldUpdateOperationsInput | string
     name1?: StringFieldUpdateOperationsInput | string
     name2?: StringFieldUpdateOperationsInput | string
-    civilId1?: IntFieldUpdateOperationsInput | number
-    civilId2?: IntFieldUpdateOperationsInput | number
-    phone1?: IntFieldUpdateOperationsInput | number
-    phone2?: IntFieldUpdateOperationsInput | number
+    civilId1?: StringFieldUpdateOperationsInput | string
+    civilId2?: StringFieldUpdateOperationsInput | string
+    phone1?: StringFieldUpdateOperationsInput | string
+    phone2?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
@@ -3732,10 +3716,10 @@ export namespace Prisma {
     tournamentId: string
     name1: string
     name2: string
-    civilId1: number
-    civilId2: number
-    phone1: number
-    phone2: number
+    civilId1: string
+    civilId2: string
+    phone1: string
+    phone2: string
     createdAt?: Date | string
   }
 
@@ -3744,10 +3728,10 @@ export namespace Prisma {
     teamNumber?: IntFieldUpdateOperationsInput | number
     name1?: StringFieldUpdateOperationsInput | string
     name2?: StringFieldUpdateOperationsInput | string
-    civilId1?: IntFieldUpdateOperationsInput | number
-    civilId2?: IntFieldUpdateOperationsInput | number
-    phone1?: IntFieldUpdateOperationsInput | number
-    phone2?: IntFieldUpdateOperationsInput | number
+    civilId1?: StringFieldUpdateOperationsInput | string
+    civilId2?: StringFieldUpdateOperationsInput | string
+    phone1?: StringFieldUpdateOperationsInput | string
+    phone2?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
@@ -3757,10 +3741,10 @@ export namespace Prisma {
     tournamentId?: StringFieldUpdateOperationsInput | string
     name1?: StringFieldUpdateOperationsInput | string
     name2?: StringFieldUpdateOperationsInput | string
-    civilId1?: IntFieldUpdateOperationsInput | number
-    civilId2?: IntFieldUpdateOperationsInput | number
-    phone1?: IntFieldUpdateOperationsInput | number
-    phone2?: IntFieldUpdateOperationsInput | number
+    civilId1?: StringFieldUpdateOperationsInput | string
+    civilId2?: StringFieldUpdateOperationsInput | string
+    phone1?: StringFieldUpdateOperationsInput | string
+    phone2?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
@@ -3945,8 +3929,8 @@ export namespace Prisma {
 
   export type TeamTournamentIdCivilId1CivilId2CompoundUniqueInput = {
     tournamentId: string
-    civilId1: number
-    civilId2: number
+    civilId1: string
+    civilId2: string
   }
 
   export type TeamCountOrderByAggregateInput = {
@@ -3964,10 +3948,6 @@ export namespace Prisma {
 
   export type TeamAvgOrderByAggregateInput = {
     teamNumber?: SortOrder
-    civilId1?: SortOrder
-    civilId2?: SortOrder
-    phone1?: SortOrder
-    phone2?: SortOrder
   }
 
   export type TeamMaxOrderByAggregateInput = {
@@ -3998,10 +3978,6 @@ export namespace Prisma {
 
   export type TeamSumOrderByAggregateInput = {
     teamNumber?: SortOrder
-    civilId1?: SortOrder
-    civilId2?: SortOrder
-    phone1?: SortOrder
-    phone2?: SortOrder
   }
 
   export type TeamCreateNestedManyWithoutTournamentInput = {
@@ -4221,10 +4197,10 @@ export namespace Prisma {
     teamNumber: number
     name1: string
     name2: string
-    civilId1: number
-    civilId2: number
-    phone1: number
-    phone2: number
+    civilId1: string
+    civilId2: string
+    phone1: string
+    phone2: string
     createdAt?: Date | string
   }
 
@@ -4233,10 +4209,10 @@ export namespace Prisma {
     teamNumber: number
     name1: string
     name2: string
-    civilId1: number
-    civilId2: number
-    phone1: number
-    phone2: number
+    civilId1: string
+    civilId2: string
+    phone1: string
+    phone2: string
     createdAt?: Date | string
   }
 
@@ -4275,10 +4251,10 @@ export namespace Prisma {
     tournamentId?: StringFilter<"Team"> | string
     name1?: StringFilter<"Team"> | string
     name2?: StringFilter<"Team"> | string
-    civilId1?: IntFilter<"Team"> | number
-    civilId2?: IntFilter<"Team"> | number
-    phone1?: IntFilter<"Team"> | number
-    phone2?: IntFilter<"Team"> | number
+    civilId1?: StringFilter<"Team"> | string
+    civilId2?: StringFilter<"Team"> | string
+    phone1?: StringFilter<"Team"> | string
+    phone2?: StringFilter<"Team"> | string
     createdAt?: DateTimeFilter<"Team"> | Date | string
   }
 
@@ -4347,10 +4323,10 @@ export namespace Prisma {
     teamNumber: number
     name1: string
     name2: string
-    civilId1: number
-    civilId2: number
-    phone1: number
-    phone2: number
+    civilId1: string
+    civilId2: string
+    phone1: string
+    phone2: string
     createdAt?: Date | string
   }
 
@@ -4359,10 +4335,10 @@ export namespace Prisma {
     teamNumber?: IntFieldUpdateOperationsInput | number
     name1?: StringFieldUpdateOperationsInput | string
     name2?: StringFieldUpdateOperationsInput | string
-    civilId1?: IntFieldUpdateOperationsInput | number
-    civilId2?: IntFieldUpdateOperationsInput | number
-    phone1?: IntFieldUpdateOperationsInput | number
-    phone2?: IntFieldUpdateOperationsInput | number
+    civilId1?: StringFieldUpdateOperationsInput | string
+    civilId2?: StringFieldUpdateOperationsInput | string
+    phone1?: StringFieldUpdateOperationsInput | string
+    phone2?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
@@ -4371,10 +4347,10 @@ export namespace Prisma {
     teamNumber?: IntFieldUpdateOperationsInput | number
     name1?: StringFieldUpdateOperationsInput | string
     name2?: StringFieldUpdateOperationsInput | string
-    civilId1?: IntFieldUpdateOperationsInput | number
-    civilId2?: IntFieldUpdateOperationsInput | number
-    phone1?: IntFieldUpdateOperationsInput | number
-    phone2?: IntFieldUpdateOperationsInput | number
+    civilId1?: StringFieldUpdateOperationsInput | string
+    civilId2?: StringFieldUpdateOperationsInput | string
+    phone1?: StringFieldUpdateOperationsInput | string
+    phone2?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
@@ -4383,10 +4359,10 @@ export namespace Prisma {
     teamNumber?: IntFieldUpdateOperationsInput | number
     name1?: StringFieldUpdateOperationsInput | string
     name2?: StringFieldUpdateOperationsInput | string
-    civilId1?: IntFieldUpdateOperationsInput | number
-    civilId2?: IntFieldUpdateOperationsInput | number
-    phone1?: IntFieldUpdateOperationsInput | number
-    phone2?: IntFieldUpdateOperationsInput | number
+    civilId1?: StringFieldUpdateOperationsInput | string
+    civilId2?: StringFieldUpdateOperationsInput | string
+    phone1?: StringFieldUpdateOperationsInput | string
+    phone2?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
