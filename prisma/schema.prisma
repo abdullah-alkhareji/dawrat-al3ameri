@@ -22,6 +22,29 @@ model Tournament {
   startDate  DateTime
   endDate    DateTime
   lastRegDate DateTime
+
+  teams Team[]
+
   createdAt  DateTime @default(now())
 }
+
+model Team {
+  id         String   @id @default(cuid())
+  teamNumber Int
+  tournamentId String 
+  tournament  Tournament @relation(fields: [tournamentId], references: [id])
+  name1       String
+  name2       String
+  civilId1    Int
+  civilId2    Int
+  phone1      Int
+  phone2      Int
+
+
+  createdAt  DateTime @default(now())
+
+  @@map("teams")
+  @@unique([tournamentId, civilId1, civilId2])
+}
+
 

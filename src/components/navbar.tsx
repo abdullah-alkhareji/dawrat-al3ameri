@@ -1,13 +1,19 @@
 import React from "react";
 import ModeToggle from "./mode-toggle";
+import AppLogo from "./app-logo";
+import Link from "next/link";
 
 const Navbar = () => {
   return (
     <header className="sticky top-0 z-50 w-full bg-card border-b px-4">
       <div className="w-full max-w-screen-2xl mx-auto flex h-14 items-center ">
-        <h1 className="text-2xl font-bold tracking-tight">
-          دورة <span className="text-primary font-black">العميري</span>
-        </h1>
+        <Link href="/" className="flex items-center gap-2">
+          <AppLogo />
+          <h1 className="text-xl font-bold tracking-tight">
+            بطولة <span className="text-primary font-black">العميري</span>{" "}
+            للبلوت
+          </h1>
+        </Link>
         <div className="flex flex-1 items-center justify-end">
           <ModeToggle />
         </div>

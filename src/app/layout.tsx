@@ -1,6 +1,15 @@
 import type { Metadata } from "next";
+import { Cairo } from "next/font/google";
 import "./globals.css";
 import { ThemeProvider } from "@/components/theme-provider";
+import { Toaster } from "@/components/ui/sonner";
+
+const cairo = Cairo({
+  subsets: ["arabic"],
+  weight: ["200", "300", "400", "500", "600", "700", "800", "900", "1000"],
+  variable: "--font-cairo",
+  display: "swap",
+});
 
 export const metadata: Metadata = {
   title: "Create Next App",
@@ -13,13 +22,19 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="ar" dir="rtl" suppressHydrationWarning>
-      <body className={`font-[Cairo] antialiased`}>
+    <html
+      lang="ar"
+      dir="rtl"
+      suppressHydrationWarning
+      className={cairo.variable}
+    >
+      <body className={`${cairo.className} antialiased`}>
         <ThemeProvider
           attribute="class"
           defaultTheme="dark"
           disableTransitionOnChange
         >
+          <Toaster />
           {children}
         </ThemeProvider>
       </body>

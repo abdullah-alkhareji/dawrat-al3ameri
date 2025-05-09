@@ -2,7 +2,7 @@
 
 import Navbar from "@/components/navbar";
 import MobileNav from "@/components/mobile-nav";
-import AddTournamentButton from "@/components/tournament/add-tournament-button";
+import AddTournamentButton from "@/components/add-tournament-button";
 
 const ProtectedLayout = ({ children }: { children: React.ReactNode }) => {
   return (

@@ -21,11 +21,7 @@ import { toast } from "sonner";
 import { createTournament } from "@/actions/tournament";
 import { addTournamentSchema } from "@/lib/scheemas";
 
-interface AddTournamentFormProps {
-  onSuccess?: () => void;
-}
-
-const AddTournamentForm = ({ onSuccess }: AddTournamentFormProps) => {
+const AddTournamentForm = () => {
   const router = useRouter();
   const form = useForm<z.infer<typeof addTournamentSchema>>({
     resolver: zodResolver(addTournamentSchema),
@@ -50,9 +46,6 @@ const AddTournamentForm = ({ onSuccess }: AddTournamentFormProps) => {
       toast.success("تمام👌");
       form.reset();
       router.push("/");
-
-      // Call onSuccess callback if provided
-      onSuccess?.();
     } catch (error) {
       console.error(error);
       toast.error("ما ضبطت");

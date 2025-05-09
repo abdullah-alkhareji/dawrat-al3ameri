@@ -1,4 +1,4 @@
-import AddTournamentForm from "@/components/tournament/add-tournament-form";
+import AddTournamentForm from "@/components/forms/add-tournament-form";
 import React from "react";
 import { Button } from "@/components/ui/button";
 import { ArrowLeftIcon } from "lucide-react";

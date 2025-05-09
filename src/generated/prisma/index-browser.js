@@ -131,6 +131,19 @@ exports.Prisma.TournamentScalarFieldEnum = {
   createdAt: 'createdAt'
 };
 
+exports.Prisma.TeamScalarFieldEnum = {
+  id: 'id',
+  teamNumber: 'teamNumber',
+  tournamentId: 'tournamentId',
+  name1: 'name1',
+  name2: 'name2',
+  civilId1: 'civilId1',
+  civilId2: 'civilId2',
+  phone1: 'phone1',
+  phone2: 'phone2',
+  createdAt: 'createdAt'
+};
+
 exports.Prisma.SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -148,7 +161,8 @@ exports.Prisma.NullsOrder = {
 
 
 exports.Prisma.ModelName = {
-  Tournament: 'Tournament'
+  Tournament: 'Tournament',
+  Team: 'Team'
 };
 
 /**

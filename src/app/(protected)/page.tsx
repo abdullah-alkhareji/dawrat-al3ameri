@@ -1,5 +1,5 @@
 import React from "react";
-import TournamentList from "@/components/tournament/tournament-list";
+import TournamentList from "@/components/tournament-list";
 const DashboardPage = () => {
   return (
     <>
