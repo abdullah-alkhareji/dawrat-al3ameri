@@ -1,15 +1,31 @@
 import React from "react";
 import { getTournament } from "@/actions/tournament";
-import { ArrowLeft, Calendar, Link2, MapPin } from "lucide-react";
+import {
+  ArrowLeft,
+  Calendar,
+  Link2,
+  MapPin,
+  Users,
+  Trophy,
+} from "lucide-react";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import CopyButton from "@/components/copy-button";
+import { Separator } from "@/components/ui/separator";
+import TournamentNotFound from "./not-found";
 
 const TournamentPage = async ({ params }: { params: { id: string } }) => {
   const { id } = await params;
+  if (!id) {
+    return <TournamentNotFound />;
+  }
+
   const { data: tournament, error } = await getTournament(id);
   if (error) {
     return <div>{error}</div>;
+  }
+  if (!tournament) {
+    return <TournamentNotFound />;
   }
   const baseUrl = process.env.NEXT_PUBLIC_APP_URL;
 
@@ -23,7 +39,7 @@ const TournamentPage = async ({ params }: { params: { id: string } }) => {
           </Link>
         </Button>
       </div>
-      <div className="flex items-center gap-2">
+      <div className="flex items-center gap-2 p-2">
         <p className="text-sm text-muted-foreground flex items-center gap-2">
           <Calendar className="size-4 text-primary" />
           {tournament?.startDate.toLocaleDateString()}
@@ -34,14 +50,23 @@ const TournamentPage = async ({ params }: { params: { id: string } }) => {
           {tournament?.endDate.toLocaleDateString()}
         </p>
       </div>
-      <div className="flex items-center gap-2 justify-between">
+      <div className="flex items-center gap-2 justify-between p-2">
+        <p className="text-sm text-muted-foreground flex items-center gap-2 max-w-full truncate overflow-ellipsis whitespace-nowrap">
+          <Users className="size-4 text-primary" />
+          الفرق المتسجلة
+        </p>
+        <p className="text-sm text-muted-foreground flex items-center gap-2 max-w-full truncate overflow-ellipsis whitespace-nowrap">
+          {tournament?.teamCount} / {tournament?.teams?.length}
+        </p>
+      </div>
+      <div className="flex items-center gap-2 justify-between p-2">
         <p className="text-sm text-muted-foreground flex items-center gap-2 max-w-full truncate overflow-ellipsis whitespace-nowrap">
           <MapPin className="size-4 text-primary" />
-          {tournament?.location}
+          اللوكيشن
         </p>
         {tournament?.location && <CopyButton text={tournament?.location} />}
       </div>
-      <div className="flex items-center gap-2 justify-between">
+      <div className="flex items-center gap-2 justify-between p-2">
         <p className="text-sm text-muted-foreground flex items-center gap-2 max-w-full truncate overflow-ellipsis whitespace-nowrap">
           <Link2 className="size-4 text-primary" />
           رابط التسجيل
@@ -49,6 +74,21 @@ const TournamentPage = async ({ params }: { params: { id: string } }) => {
         {tournament?.name && (
           <CopyButton text={`${baseUrl}/apply?id=${tournament?.id}`} />
         )}
+      </div>
+      <Separator />
+      <div className="flex flex-col gap-2">
+        <Button variant="outline" asChild>
+          <Link href={`/${id}/teams`}>
+            <Users className="size-4" />
+            الفرق
+          </Link>
+        </Button>
+        <Button variant="outline" asChild>
+          <Link href={`/${id}/matches`}>
+            <Trophy className="size-4" />
+            المباريات
+          </Link>
+        </Button>
       </div>
     </div>
   );

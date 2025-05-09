@@ -4,7 +4,7 @@ import { prisma } from "@/lib/prisma";
 import { revalidatePath } from "next/cache";
 import { z } from "zod";
 import { addTournamentSchema } from "@/lib/scheemas";
-import { Tournament } from "@/generated/prisma";
+import { Tournament, Team } from "@/generated/prisma";
 
 export const createTournament = async (
   data: z.infer<typeof addTournamentSchema>
@@ -30,11 +30,18 @@ export const createTournament = async (
 
 export const getTournaments = async (): Promise<{
   success: boolean;
-  data?: Tournament[];
+  data?: (Tournament & { teams: Team[] })[];
   error?: string;
 }> => {
   try {
-    const tournaments = await prisma.tournament.findMany();
+    const tournaments = await prisma.tournament.findMany({
+      orderBy: {
+        startDate: "asc",
+      },
+      include: {
+        teams: true,
+      },
+    });
     return { success: true, data: tournaments };
   } catch (error) {
     console.error("[TOURNAMENT_GET]", error);
@@ -44,7 +51,11 @@ export const getTournaments = async (): Promise<{
 
 export const getTournament = async (
   id: string
-): Promise<{ success: boolean; data?: Tournament | null; error?: string }> => {
+): Promise<{
+  success: boolean;
+  data?: (Tournament & { teams: Team[] }) | null;
+  error?: string;
+}> => {
   try {
     const tournament = await prisma.tournament.findUnique({
       where: { id },
