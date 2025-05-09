@@ -3,7 +3,7 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { applicationFormSchema } from "@/lib/scheemas";
-import React from "react";
+import React, { useState } from "react";
 import { z } from "zod";
 import {
   Form,
@@ -20,18 +20,17 @@ import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 
 const ApplicationForm = ({
-  teamsCount,
   tournamentId,
 }: {
   teamsCount: number;
   tournamentId: string;
 }) => {
   const router = useRouter();
+  const [error, setError] = useState<string | null>(null);
 
   const form = useForm<z.infer<typeof applicationFormSchema>>({
     resolver: zodResolver(applicationFormSchema),
     defaultValues: {
-      teamNumber: teamsCount + 1,
       name1: "",
       name2: "",
       civilId1: "",
@@ -51,9 +50,12 @@ const ApplicationForm = ({
 
       toast.success("تم إنشاء الفريق بنجاح");
       form.reset();
+      setError(null);
       router.push(`/review?id=${result.data?.id}`);
-    } catch (error) {
+    } catch (error: unknown) {
+      const errorMessage = error instanceof Error ? error.message : "حدث خطأ";
       toast.error("حدث خطأ");
+      setError(errorMessage);
       console.log(error);
     }
   };
@@ -175,6 +177,7 @@ const ApplicationForm = ({
             تسجيل
           </Button>
         </div>
+        {error && <p className="text-red-500">{error}</p>}
       </form>
     </Form>
   );

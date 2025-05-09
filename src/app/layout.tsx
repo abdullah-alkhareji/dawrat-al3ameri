@@ -23,7 +23,7 @@ export default function RootLayout({
 }>) {
   return (
     <html
-      lang="ar"
+      lang="en"
       dir="rtl"
       suppressHydrationWarning
       className={cairo.variable}

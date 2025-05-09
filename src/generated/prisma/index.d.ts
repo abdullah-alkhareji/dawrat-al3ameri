@@ -3527,11 +3527,13 @@ export namespace Prisma {
 
   export type TeamWhereUniqueInput = Prisma.AtLeast<{
     id?: string
+    teamNumber?: number
     tournamentId_civilId1_civilId2?: TeamTournamentIdCivilId1CivilId2CompoundUniqueInput
+    tournamentId_civilId1?: TeamTournamentIdCivilId1CompoundUniqueInput
+    tournamentId_civilId2?: TeamTournamentIdCivilId2CompoundUniqueInput
     AND?: TeamWhereInput | TeamWhereInput[]
     OR?: TeamWhereInput[]
     NOT?: TeamWhereInput | TeamWhereInput[]
-    teamNumber?: IntFilter<"Team"> | number
     tournamentId?: StringFilter<"Team"> | string
     name1?: StringFilter<"Team"> | string
     name2?: StringFilter<"Team"> | string
@@ -3541,7 +3543,7 @@ export namespace Prisma {
     phone2?: StringFilter<"Team"> | string
     createdAt?: DateTimeFilter<"Team"> | Date | string
     tournament?: XOR<TournamentScalarRelationFilter, TournamentWhereInput>
-  }, "id" | "tournamentId_civilId1_civilId2">
+  }, "id" | "teamNumber" | "tournamentId_civilId1_civilId2" | "tournamentId_civilId1" | "tournamentId_civilId2">
 
   export type TeamOrderByWithAggregationInput = {
     id?: SortOrder
@@ -3660,7 +3662,7 @@ export namespace Prisma {
 
   export type TeamCreateInput = {
     id?: string
-    teamNumber: number
+    teamNumber?: number
     name1: string
     name2: string
     civilId1: string
@@ -3673,7 +3675,7 @@ export namespace Prisma {
 
   export type TeamUncheckedCreateInput = {
     id?: string
-    teamNumber: number
+    teamNumber?: number
     tournamentId: string
     name1: string
     name2: string
@@ -3686,7 +3688,6 @@ export namespace Prisma {
 
   export type TeamUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
-    teamNumber?: IntFieldUpdateOperationsInput | number
     name1?: StringFieldUpdateOperationsInput | string
     name2?: StringFieldUpdateOperationsInput | string
     civilId1?: StringFieldUpdateOperationsInput | string
@@ -3712,7 +3713,7 @@ export namespace Prisma {
 
   export type TeamCreateManyInput = {
     id?: string
-    teamNumber: number
+    teamNumber?: number
     tournamentId: string
     name1: string
     name2: string
@@ -3725,7 +3726,6 @@ export namespace Prisma {
 
   export type TeamUpdateManyMutationInput = {
     id?: StringFieldUpdateOperationsInput | string
-    teamNumber?: IntFieldUpdateOperationsInput | number
     name1?: StringFieldUpdateOperationsInput | string
     name2?: StringFieldUpdateOperationsInput | string
     civilId1?: StringFieldUpdateOperationsInput | string
@@ -3930,6 +3930,16 @@ export namespace Prisma {
   export type TeamTournamentIdCivilId1CivilId2CompoundUniqueInput = {
     tournamentId: string
     civilId1: string
+    civilId2: string
+  }
+
+  export type TeamTournamentIdCivilId1CompoundUniqueInput = {
+    tournamentId: string
+    civilId1: string
+  }
+
+  export type TeamTournamentIdCivilId2CompoundUniqueInput = {
+    tournamentId: string
     civilId2: string
   }
 
@@ -4194,7 +4204,7 @@ export namespace Prisma {
 
   export type TeamCreateWithoutTournamentInput = {
     id?: string
-    teamNumber: number
+    teamNumber?: number
     name1: string
     name2: string
     civilId1: string
@@ -4206,7 +4216,7 @@ export namespace Prisma {
 
   export type TeamUncheckedCreateWithoutTournamentInput = {
     id?: string
-    teamNumber: number
+    teamNumber?: number
     name1: string
     name2: string
     civilId1: string
@@ -4320,7 +4330,7 @@ export namespace Prisma {
 
   export type TeamCreateManyTournamentInput = {
     id?: string
-    teamNumber: number
+    teamNumber?: number
     name1: string
     name2: string
     civilId1: string
@@ -4332,7 +4342,6 @@ export namespace Prisma {
 
   export type TeamUpdateWithoutTournamentInput = {
     id?: StringFieldUpdateOperationsInput | string
-    teamNumber?: IntFieldUpdateOperationsInput | number
     name1?: StringFieldUpdateOperationsInput | string
     name2?: StringFieldUpdateOperationsInput | string
     civilId1?: StringFieldUpdateOperationsInput | string

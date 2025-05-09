@@ -30,9 +30,9 @@ model Tournament {
 
 model Team {
   id           String     @id @default(cuid())
-  teamNumber   Int
+  teamNumber   Int        @unique @default(autoincrement())
   tournamentId String
-  tournament   Tournament @relation(fields: [tournamentId], references: [id])
+  tournament   Tournament @relation(fields: [tournamentId], references: [id], onDelete: Cascade)
   name1        String
   name2        String
   civilId1     String
@@ -43,5 +43,7 @@ model Team {
   createdAt DateTime @default(now())
 
   @@unique([tournamentId, civilId1, civilId2])
+  @@unique([tournamentId, civilId1])
+  @@unique([tournamentId, civilId2])
   @@map("teams")
 }

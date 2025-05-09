@@ -1,7 +1,7 @@
 import React from "react";
 import { getTeam } from "@/actions/teams";
 import { redirect } from "next/navigation";
-import { Calendar } from "lucide-react";
+import { Calendar, MapPin } from "lucide-react";
 
 const ReviewPage = async ({
   searchParams,
@@ -63,8 +63,8 @@ const ReviewPage = async ({
           </p>
         </div>
         {team?.tournament?.location && (
-          <p className="text-foreground ">
-            الموقع:{" "}
+          <p className="text-foreground flex items-center gap-2">
+            <MapPin className="size-4 text-primary" />
             <a
               href={team?.tournament?.location}
               target="_blank"

@@ -14,6 +14,11 @@ const TournamentList = async () => {
   return (
     <div className="w-full flex flex-col gap-4">
       <h1 className="text-2xl font-bold">البطولات</h1>
+      {tournaments?.length === 0 && (
+        <div className="flex items-center justify-center h-full">
+          <p className="text-muted-foreground">لا يوجد بطولات</p>
+        </div>
+      )}
       {tournaments?.map((tournament) => (
         <Link href={`/${tournament.id}`} key={tournament.id}>
           <div className="flex items-center justify-between gap-2 bg-card rounded-lg p-4 border border-muted">

@@ -177,12 +177,10 @@ const AddTournamentForm = () => {
               )}
             />
           </div>
-          <div className="col-span-1 ">
-            <Button type="submit" className="w-full">
-              ضيف
-            </Button>
-          </div>
         </div>
+        <Button type="submit" className="w-full">
+          ضيف
+        </Button>
       </form>
     </Form>
   );

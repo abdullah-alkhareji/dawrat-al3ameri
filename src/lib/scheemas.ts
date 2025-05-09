@@ -12,9 +12,6 @@ export const addTournamentSchema = z.object({
 });
 
 export const applicationFormSchema = z.object({
-  teamNumber: z.number({ required_error: "مطلوب" }).min(1, {
-    message: "مطلوب",
-  }),
   name1: z.string({ required_error: "مطلوب" }).min(1, {
     message: "مطلوب",
   }),
