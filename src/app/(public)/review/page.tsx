@@ -33,11 +33,13 @@ const ReviewPage = async ({
 
   return (
     <div className="w-full h-full max-w-screen-2xl mx-auto flex flex-col gap-4">
-      <h1 className="text-3xl font-bold text-center mb-4">كبجرها 💾</h1>
+      <h1 className="text-3xl lg:text-5xl font-bold text-center mb-4">
+        كبجرها 💾
+      </h1>
       <div className="flex flex-col items-center justify-center gap-4 bg-card p-4 rounded-lg ">
         <h3 className="text-center">فريقك رقم</h3>
         <div className="flex justify-center">
-          <h1 className="text-8xl font-bold text-center mb-4">
+          <h1 className="text-9xl font-bold text-center mb-4">
             {team?.teamNumber}
           </h1>
         </div>
@@ -67,7 +69,8 @@ const ReviewPage = async ({
             <span className="text-muted-foreground">{team?.civilId2}</span>
           </p>
           <p className="text-foreground ">
-            رق: <span className="text-muted-foreground">{team?.phone2}</span>
+            رقم التلفون:{" "}
+            <span className="text-muted-foreground">{team?.phone2}</span>
           </p>
         </div>
       </div>
