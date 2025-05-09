@@ -1,6 +1,6 @@
 "use server";
 
-import { Team } from "@/generated/prisma";
+import { Team, Tournament } from "@/generated/prisma";
 import { z } from "zod";
 import { prisma } from "@/lib/prisma";
 import { applicationFormSchema } from "@/lib/scheemas";
@@ -32,11 +32,18 @@ export const createTeam = async (
 
 export const getTeam = async (
   id: string
-): Promise<{ success: boolean; data?: Team | null; error?: string }> => {
+): Promise<{
+  success: boolean;
+  data?: (Team & { tournament: Tournament }) | null;
+  error?: string;
+}> => {
   try {
     const team = await prisma.team.findUnique({
       where: {
         id: id,
+      },
+      include: {
+        tournament: true,
       },
     });
     return { success: true, data: team };

@@ -27,7 +27,7 @@ const ApplicationPage = async ({
   if (!tournament) {
     return (
       <div className="text-center text-2xl font-bold flex flex-col items-center justify-center h-full">
-        البطولة غير موجودة
+        البطولة مو موجودة
       </div>
     );
   }
