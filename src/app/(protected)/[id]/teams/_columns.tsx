@@ -13,6 +13,7 @@ import { MoreHorizontal, Trash, Pencil } from "lucide-react";
 import DataTableHeaderCell from "@/components/ui/data-table-header-cell";
 import { deleteTeam } from "@/actions/teams";
 import { toast } from "sonner";
+import { Badge } from "@/components/ui/badge";
 
 const handleDeleteTeam = async (id: string) => {
   const { success, error } = await deleteTeam(id);
@@ -26,6 +27,15 @@ export const columns: ColumnDef<Team>[] = [
   {
     accessorKey: "teamNumber",
     header: () => <DataTableHeaderCell>ر.ف</DataTableHeaderCell>,
+    cell: ({ row }) => {
+      const { backup } = row.original;
+      return (
+        <div className="flex items-center gap-2">
+          <span>{row.original.teamNumber}</span>
+          {backup && <Badge variant="default">احتياطي</Badge>}
+        </div>
+      );
+    },
   },
   {
     accessorKey: "name1",

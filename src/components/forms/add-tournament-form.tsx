@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
 import {
   Form,
   FormControl,
@@ -20,8 +20,9 @@ import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { createTournament } from "@/actions/tournament";
 import { addTournamentSchema } from "@/lib/scheemas";
-
+import { Loader2 } from "lucide-react";
 const AddTournamentForm = () => {
+  const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
   const form = useForm<z.infer<typeof addTournamentSchema>>({
     resolver: zodResolver(addTournamentSchema),
@@ -37,6 +38,7 @@ const AddTournamentForm = () => {
 
   const onSubmit = async (values: z.infer<typeof addTournamentSchema>) => {
     try {
+      setIsLoading(true);
       const result = await createTournament(values);
 
       if (!result.success) {
@@ -49,6 +51,8 @@ const AddTournamentForm = () => {
     } catch (error) {
       console.error(error);
       toast.error("ما ضبطت");
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -67,7 +71,7 @@ const AddTournamentForm = () => {
                     اسم البطولة الي راح يطلع حق الكل
                   </FormDescription>
                   <FormControl>
-                    <Input {...field} />
+                    <Input {...field} disabled={isLoading} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -89,6 +93,7 @@ const AddTournamentForm = () => {
                       {...field}
                       onChange={(e) => field.onChange(parseInt(e.target.value))}
                       step={2}
+                      disabled={isLoading}
                     />
                   </FormControl>
                   <FormMessage />
@@ -108,6 +113,7 @@ const AddTournamentForm = () => {
                     <DatePicker
                       date={field.value}
                       onDateChange={field.onChange}
+                      disabled={isLoading}
                     />
                   </FormControl>
                   <FormMessage />
@@ -127,7 +133,7 @@ const AddTournamentForm = () => {
                     <DatePicker
                       date={field.value}
                       onDateChange={field.onChange}
-                      disabled={!form.watch("startDate")}
+                      disabled={isLoading || !form.watch("startDate")}
                       fromDate={form.watch("startDate")}
                     />
                   </FormControl>
@@ -150,7 +156,7 @@ const AddTournamentForm = () => {
                     <DatePicker
                       date={field.value}
                       onDateChange={field.onChange}
-                      disabled={!form.watch("startDate")}
+                      disabled={isLoading || !form.watch("startDate")}
                       toDate={form.watch("startDate")}
                     />
                   </FormControl>
@@ -170,7 +176,7 @@ const AddTournamentForm = () => {
                     اللوكيشن تسوي كوبي حق اللنك من قوقل ماب
                   </FormDescription>
                   <FormControl>
-                    <Input {...field} />
+                    <Input {...field} disabled={isLoading} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -178,8 +184,15 @@ const AddTournamentForm = () => {
             />
           </div>
         </div>
-        <Button type="submit" className="w-full">
-          ضيف
+        <Button type="submit" className="w-full" disabled={isLoading}>
+          {isLoading ? (
+            <div className="flex items-center gap-2">
+              <Loader2 className="size-4 animate-spin" />
+              <span>جاري الإضافة...</span>
+            </div>
+          ) : (
+            "ضيف"
+          )}
         </Button>
       </form>
     </Form>
