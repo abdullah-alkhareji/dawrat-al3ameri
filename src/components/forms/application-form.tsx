@@ -48,13 +48,14 @@ const ApplicationForm = ({
         throw new Error(result.error);
       }
 
-      toast.success("تم إنشاء الفريق بنجاح");
+      toast.success("مبروك, تسجل في البطولة👌");
       form.reset();
       setError(null);
       router.push(`/review?id=${result.data?.id}`);
     } catch (error: unknown) {
-      const errorMessage = error instanceof Error ? error.message : "حدث خطأ";
-      toast.error("حدث خطأ");
+      const errorMessage =
+        error instanceof Error ? error.message : "صار شي غلط";
+      toast.error(errorMessage);
       setError(errorMessage);
       console.log(error);
     }

@@ -12,20 +12,18 @@ import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import CopyButton from "@/components/copy-button";
 import { Separator } from "@/components/ui/separator";
-import TournamentNotFound from "./not-found";
+import { redirect } from "next/navigation";
+// import TournamentNotFound from "./not-found";
 
 const TournamentPage = async ({ params }: { params: { id: string } }) => {
   const { id } = await params;
-  if (!id) {
-    return <TournamentNotFound />;
-  }
 
   const { data: tournament, error } = await getTournament(id);
   if (error) {
     return <div>{error}</div>;
   }
   if (!tournament) {
-    return <TournamentNotFound />;
+    return redirect("/");
   }
   const baseUrl = process.env.NEXT_PUBLIC_APP_URL;
 

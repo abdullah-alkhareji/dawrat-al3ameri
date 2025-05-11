@@ -1,8 +1,8 @@
 "use server";
 
-import { Team, Tournament } from "@/generated/prisma";
+import { Team, Tournament } from "@prisma/client";
 import { z } from "zod";
-import { prisma } from "@/lib/prisma";
+import prisma from "@/lib/prisma";
 import { applicationFormSchema } from "@/lib/scheemas";
 import { revalidatePath } from "next/cache";
 

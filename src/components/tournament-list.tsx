@@ -16,7 +16,7 @@ const TournamentList = async () => {
       <h1 className="text-2xl font-bold">البطولات</h1>
       {tournaments?.length === 0 && (
         <div className="flex items-center justify-center h-full">
-          <p className="text-muted-foreground">لا يوجد بطولات</p>
+          <p className="text-muted-foreground">ماكو بطولات</p>
         </div>
       )}
       {tournaments?.map((tournament) => (

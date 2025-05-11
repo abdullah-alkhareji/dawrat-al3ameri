@@ -39,3 +39,24 @@ export const applicationFormSchema = z.object({
     .max(8, { message: "رقم الهاتف يجب ان يكون 8 أرقام" })
     .regex(/^\d+$/, { message: "يجب ان يحتوي على ارقام فقط" }),
 });
+
+export const loginSchema = z.object({
+  email: z
+    .string({ required_error: "مطلوب" })
+    .email({ message: "غلط, هذا مو ايميل" }),
+  password: z.string({ required_error: "مطلوب" }).min(8, {
+    message: "عالاقل 8 حروف",
+  }),
+});
+
+export const registerSchema = z.object({
+  name: z.string({ required_error: "مطلوب" }).min(1, {
+    message: "مطلوب",
+  }),
+  email: z
+    .string({ required_error: "مطلوب" })
+    .email({ message: "غلط, هذا مو ايميل" }),
+  password: z.string({ required_error: "مطلوب" }).min(8, {
+    message: "عالاقل 8 حروف",
+  }),
+});

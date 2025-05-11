@@ -1,10 +1,10 @@
 "use server";
 
-import { prisma } from "@/lib/prisma";
+import prisma from "@/lib/prisma";
 import { revalidatePath } from "next/cache";
 import { z } from "zod";
 import { addTournamentSchema } from "@/lib/scheemas";
-import { Tournament, Team } from "@/generated/prisma";
+import { Tournament, Team } from "@prisma/client";
 
 export const createTournament = async (
   data: z.infer<typeof addTournamentSchema>
