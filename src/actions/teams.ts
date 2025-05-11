@@ -25,11 +25,6 @@ export const createTeam = async (
       return { success: false, error: "البطولة غير موجودة" };
     }
 
-    // Check if tournament is full
-    if (tournament._count.teams >= tournament.teamCount) {
-      return { success: false, error: "البطولة مكتملة العدد" };
-    }
-
     // Check if either player is already registered in this tournament
     const existingPlayers = await prisma.team.findFirst({
       where: {
@@ -64,6 +59,7 @@ export const createTeam = async (
         civilId2: data.civilId2,
         phone1: data.phone1,
         phone2: data.phone2,
+        backup: tournament.teamCount <= tournament._count.teams,
       },
     });
     revalidatePath("/[id]/teams", "page");

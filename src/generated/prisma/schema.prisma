@@ -39,6 +39,7 @@ model Team {
   civilId2     String
   phone1       String
   phone2       String
+  backup       Boolean    @default(false)
 
   createdAt DateTime @default(now())
 

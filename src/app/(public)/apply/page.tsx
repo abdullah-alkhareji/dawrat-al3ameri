@@ -38,10 +38,6 @@ const ApplicationPage = async ({
         <div className="text-center text-2xl font-bold flex flex-col items-center justify-center h-full">
           معلش, انتهى التسجيل
         </div>
-      ) : tournament?.teams?.length >= tournament?.teamCount ? (
-        <div className="text-center text-2xl font-bold flex flex-col items-center justify-center h-full">
-          معلش, فولت البطولة
-        </div>
       ) : (
         <div className="flex flex-col gap-4">
           <div className="flex flex-col gap-2">

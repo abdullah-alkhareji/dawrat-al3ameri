@@ -141,6 +141,7 @@ exports.Prisma.TeamScalarFieldEnum = {
   civilId2: 'civilId2',
   phone1: 'phone1',
   phone2: 'phone2',
+  backup: 'backup',
   createdAt: 'createdAt'
 };
 

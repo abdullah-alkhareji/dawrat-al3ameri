@@ -2163,6 +2163,7 @@ export namespace Prisma {
     civilId2: string | null
     phone1: string | null
     phone2: string | null
+    backup: boolean | null
     createdAt: Date | null
   }
 
@@ -2176,6 +2177,7 @@ export namespace Prisma {
     civilId2: string | null
     phone1: string | null
     phone2: string | null
+    backup: boolean | null
     createdAt: Date | null
   }
 
@@ -2189,6 +2191,7 @@ export namespace Prisma {
     civilId2: number
     phone1: number
     phone2: number
+    backup: number
     createdAt: number
     _all: number
   }
@@ -2212,6 +2215,7 @@ export namespace Prisma {
     civilId2?: true
     phone1?: true
     phone2?: true
+    backup?: true
     createdAt?: true
   }
 
@@ -2225,6 +2229,7 @@ export namespace Prisma {
     civilId2?: true
     phone1?: true
     phone2?: true
+    backup?: true
     createdAt?: true
   }
 
@@ -2238,6 +2243,7 @@ export namespace Prisma {
     civilId2?: true
     phone1?: true
     phone2?: true
+    backup?: true
     createdAt?: true
     _all?: true
   }
@@ -2338,6 +2344,7 @@ export namespace Prisma {
     civilId2: string
     phone1: string
     phone2: string
+    backup: boolean
     createdAt: Date
     _count: TeamCountAggregateOutputType | null
     _avg: TeamAvgAggregateOutputType | null
@@ -2370,6 +2377,7 @@ export namespace Prisma {
     civilId2?: boolean
     phone1?: boolean
     phone2?: boolean
+    backup?: boolean
     createdAt?: boolean
     tournament?: boolean | TournamentDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["team"]>
@@ -2384,6 +2392,7 @@ export namespace Prisma {
     civilId2?: boolean
     phone1?: boolean
     phone2?: boolean
+    backup?: boolean
     createdAt?: boolean
     tournament?: boolean | TournamentDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["team"]>
@@ -2398,6 +2407,7 @@ export namespace Prisma {
     civilId2?: boolean
     phone1?: boolean
     phone2?: boolean
+    backup?: boolean
     createdAt?: boolean
     tournament?: boolean | TournamentDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["team"]>
@@ -2412,10 +2422,11 @@ export namespace Prisma {
     civilId2?: boolean
     phone1?: boolean
     phone2?: boolean
+    backup?: boolean
     createdAt?: boolean
   }
 
-  export type TeamOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "teamNumber" | "tournamentId" | "name1" | "name2" | "civilId1" | "civilId2" | "phone1" | "phone2" | "createdAt", ExtArgs["result"]["team"]>
+  export type TeamOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "teamNumber" | "tournamentId" | "name1" | "name2" | "civilId1" | "civilId2" | "phone1" | "phone2" | "backup" | "createdAt", ExtArgs["result"]["team"]>
   export type TeamInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     tournament?: boolean | TournamentDefaultArgs<ExtArgs>
   }
@@ -2441,6 +2452,7 @@ export namespace Prisma {
       civilId2: string
       phone1: string
       phone2: string
+      backup: boolean
       createdAt: Date
     }, ExtArgs["result"]["team"]>
     composites: {}
@@ -2875,6 +2887,7 @@ export namespace Prisma {
     readonly civilId2: FieldRef<"Team", 'String'>
     readonly phone1: FieldRef<"Team", 'String'>
     readonly phone2: FieldRef<"Team", 'String'>
+    readonly backup: FieldRef<"Team", 'Boolean'>
     readonly createdAt: FieldRef<"Team", 'DateTime'>
   }
     
@@ -3328,6 +3341,7 @@ export namespace Prisma {
     civilId2: 'civilId2',
     phone1: 'phone1',
     phone2: 'phone2',
+    backup: 'backup',
     createdAt: 'createdAt'
   };
 
@@ -3402,6 +3416,13 @@ export namespace Prisma {
    * Reference to a field of type 'DateTime[]'
    */
   export type ListDateTimeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'DateTime[]'>
+    
+
+
+  /**
+   * Reference to a field of type 'Boolean'
+   */
+  export type BooleanFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Boolean'>
     
 
 
@@ -3507,6 +3528,7 @@ export namespace Prisma {
     civilId2?: StringFilter<"Team"> | string
     phone1?: StringFilter<"Team"> | string
     phone2?: StringFilter<"Team"> | string
+    backup?: BoolFilter<"Team"> | boolean
     createdAt?: DateTimeFilter<"Team"> | Date | string
     tournament?: XOR<TournamentScalarRelationFilter, TournamentWhereInput>
   }
@@ -3521,6 +3543,7 @@ export namespace Prisma {
     civilId2?: SortOrder
     phone1?: SortOrder
     phone2?: SortOrder
+    backup?: SortOrder
     createdAt?: SortOrder
     tournament?: TournamentOrderByWithRelationInput
   }
@@ -3541,6 +3564,7 @@ export namespace Prisma {
     civilId2?: StringFilter<"Team"> | string
     phone1?: StringFilter<"Team"> | string
     phone2?: StringFilter<"Team"> | string
+    backup?: BoolFilter<"Team"> | boolean
     createdAt?: DateTimeFilter<"Team"> | Date | string
     tournament?: XOR<TournamentScalarRelationFilter, TournamentWhereInput>
   }, "id" | "teamNumber" | "tournamentId_civilId1_civilId2" | "tournamentId_civilId1" | "tournamentId_civilId2">
@@ -3555,6 +3579,7 @@ export namespace Prisma {
     civilId2?: SortOrder
     phone1?: SortOrder
     phone2?: SortOrder
+    backup?: SortOrder
     createdAt?: SortOrder
     _count?: TeamCountOrderByAggregateInput
     _avg?: TeamAvgOrderByAggregateInput
@@ -3576,6 +3601,7 @@ export namespace Prisma {
     civilId2?: StringWithAggregatesFilter<"Team"> | string
     phone1?: StringWithAggregatesFilter<"Team"> | string
     phone2?: StringWithAggregatesFilter<"Team"> | string
+    backup?: BoolWithAggregatesFilter<"Team"> | boolean
     createdAt?: DateTimeWithAggregatesFilter<"Team"> | Date | string
   }
 
@@ -3669,6 +3695,7 @@ export namespace Prisma {
     civilId2: string
     phone1: string
     phone2: string
+    backup?: boolean
     createdAt?: Date | string
     tournament: TournamentCreateNestedOneWithoutTeamsInput
   }
@@ -3683,6 +3710,7 @@ export namespace Prisma {
     civilId2: string
     phone1: string
     phone2: string
+    backup?: boolean
     createdAt?: Date | string
   }
 
@@ -3694,6 +3722,7 @@ export namespace Prisma {
     civilId2?: StringFieldUpdateOperationsInput | string
     phone1?: StringFieldUpdateOperationsInput | string
     phone2?: StringFieldUpdateOperationsInput | string
+    backup?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     tournament?: TournamentUpdateOneRequiredWithoutTeamsNestedInput
   }
@@ -3708,6 +3737,7 @@ export namespace Prisma {
     civilId2?: StringFieldUpdateOperationsInput | string
     phone1?: StringFieldUpdateOperationsInput | string
     phone2?: StringFieldUpdateOperationsInput | string
+    backup?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
@@ -3721,6 +3751,7 @@ export namespace Prisma {
     civilId2: string
     phone1: string
     phone2: string
+    backup?: boolean
     createdAt?: Date | string
   }
 
@@ -3732,6 +3763,7 @@ export namespace Prisma {
     civilId2?: StringFieldUpdateOperationsInput | string
     phone1?: StringFieldUpdateOperationsInput | string
     phone2?: StringFieldUpdateOperationsInput | string
+    backup?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
@@ -3745,6 +3777,7 @@ export namespace Prisma {
     civilId2?: StringFieldUpdateOperationsInput | string
     phone1?: StringFieldUpdateOperationsInput | string
     phone2?: StringFieldUpdateOperationsInput | string
+    backup?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
@@ -3922,6 +3955,11 @@ export namespace Prisma {
     _max?: NestedDateTimeFilter<$PrismaModel>
   }
 
+  export type BoolFilter<$PrismaModel = never> = {
+    equals?: boolean | BooleanFieldRefInput<$PrismaModel>
+    not?: NestedBoolFilter<$PrismaModel> | boolean
+  }
+
   export type TournamentScalarRelationFilter = {
     is?: TournamentWhereInput
     isNot?: TournamentWhereInput
@@ -3953,6 +3991,7 @@ export namespace Prisma {
     civilId2?: SortOrder
     phone1?: SortOrder
     phone2?: SortOrder
+    backup?: SortOrder
     createdAt?: SortOrder
   }
 
@@ -3970,6 +4009,7 @@ export namespace Prisma {
     civilId2?: SortOrder
     phone1?: SortOrder
     phone2?: SortOrder
+    backup?: SortOrder
     createdAt?: SortOrder
   }
 
@@ -3983,11 +4023,20 @@ export namespace Prisma {
     civilId2?: SortOrder
     phone1?: SortOrder
     phone2?: SortOrder
+    backup?: SortOrder
     createdAt?: SortOrder
   }
 
   export type TeamSumOrderByAggregateInput = {
     teamNumber?: SortOrder
+  }
+
+  export type BoolWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: boolean | BooleanFieldRefInput<$PrismaModel>
+    not?: NestedBoolWithAggregatesFilter<$PrismaModel> | boolean
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedBoolFilter<$PrismaModel>
+    _max?: NestedBoolFilter<$PrismaModel>
   }
 
   export type TeamCreateNestedManyWithoutTournamentInput = {
@@ -4056,6 +4105,10 @@ export namespace Prisma {
     create?: XOR<TournamentCreateWithoutTeamsInput, TournamentUncheckedCreateWithoutTeamsInput>
     connectOrCreate?: TournamentCreateOrConnectWithoutTeamsInput
     connect?: TournamentWhereUniqueInput
+  }
+
+  export type BoolFieldUpdateOperationsInput = {
+    set?: boolean
   }
 
   export type TournamentUpdateOneRequiredWithoutTeamsNestedInput = {
@@ -4202,6 +4255,19 @@ export namespace Prisma {
     _max?: NestedDateTimeFilter<$PrismaModel>
   }
 
+  export type NestedBoolFilter<$PrismaModel = never> = {
+    equals?: boolean | BooleanFieldRefInput<$PrismaModel>
+    not?: NestedBoolFilter<$PrismaModel> | boolean
+  }
+
+  export type NestedBoolWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: boolean | BooleanFieldRefInput<$PrismaModel>
+    not?: NestedBoolWithAggregatesFilter<$PrismaModel> | boolean
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedBoolFilter<$PrismaModel>
+    _max?: NestedBoolFilter<$PrismaModel>
+  }
+
   export type TeamCreateWithoutTournamentInput = {
     id?: string
     teamNumber?: number
@@ -4211,6 +4277,7 @@ export namespace Prisma {
     civilId2: string
     phone1: string
     phone2: string
+    backup?: boolean
     createdAt?: Date | string
   }
 
@@ -4223,6 +4290,7 @@ export namespace Prisma {
     civilId2: string
     phone1: string
     phone2: string
+    backup?: boolean
     createdAt?: Date | string
   }
 
@@ -4265,6 +4333,7 @@ export namespace Prisma {
     civilId2?: StringFilter<"Team"> | string
     phone1?: StringFilter<"Team"> | string
     phone2?: StringFilter<"Team"> | string
+    backup?: BoolFilter<"Team"> | boolean
     createdAt?: DateTimeFilter<"Team"> | Date | string
   }
 
@@ -4337,6 +4406,7 @@ export namespace Prisma {
     civilId2: string
     phone1: string
     phone2: string
+    backup?: boolean
     createdAt?: Date | string
   }
 
@@ -4348,6 +4418,7 @@ export namespace Prisma {
     civilId2?: StringFieldUpdateOperationsInput | string
     phone1?: StringFieldUpdateOperationsInput | string
     phone2?: StringFieldUpdateOperationsInput | string
+    backup?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
@@ -4360,6 +4431,7 @@ export namespace Prisma {
     civilId2?: StringFieldUpdateOperationsInput | string
     phone1?: StringFieldUpdateOperationsInput | string
     phone2?: StringFieldUpdateOperationsInput | string
+    backup?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
@@ -4372,6 +4444,7 @@ export namespace Prisma {
     civilId2?: StringFieldUpdateOperationsInput | string
     phone1?: StringFieldUpdateOperationsInput | string
     phone2?: StringFieldUpdateOperationsInput | string
+    backup?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
