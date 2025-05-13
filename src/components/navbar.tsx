@@ -3,7 +3,9 @@ import ModeToggle from "./mode-toggle";
 import AppLogo from "./app-logo";
 import Link from "next/link";
 import LogoutButton from "./logout-button";
-const Navbar = () => {
+import { Session } from "next-auth";
+
+const Navbar = ({ session }: { session?: Session | null }) => {
   return (
     <header className="sticky top-0 z-50 w-full bg-card border-b px-4 py-4">
       <div className="w-full max-w-screen-2xl mx-auto flex h-14 items-center ">
@@ -16,7 +18,7 @@ const Navbar = () => {
         </Link>
         <div className="flex flex-1 items-center justify-end gap-2">
           <ModeToggle />
-          <LogoutButton />
+          {session?.user && <LogoutButton />}
         </div>
       </div>
     </header>
