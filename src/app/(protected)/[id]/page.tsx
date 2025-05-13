@@ -23,12 +23,15 @@ const TournamentPage = async ({ params }: TournamentPageProps) => {
   const { id } = await params;
 
   const { data: tournament, error } = await getTournament(id);
+  
   if (error) {
     return <div>{error}</div>;
   }
+
   if (!tournament) {
     return redirect("/");
   }
+
   const baseUrl = process.env.NEXT_PUBLIC_APP_URL;
 
   return (
