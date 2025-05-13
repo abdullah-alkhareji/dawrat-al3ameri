@@ -14,6 +14,7 @@ import DataTableHeaderCell from "@/components/ui/data-table-header-cell";
 import { deleteTeam } from "@/actions/teams";
 import { toast } from "sonner";
 import { Badge } from "@/components/ui/badge";
+import { redirect } from "next/navigation";
 
 const handleDeleteTeam = async (id: string) => {
   const { success, error } = await deleteTeam(id);
@@ -85,7 +86,9 @@ export const columns: ColumnDef<Team>[] = [
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="start">
-            <DropdownMenuItem onClick={() => console.log(team.id)}>
+            <DropdownMenuItem
+              onClick={() => redirect(`/${team.tournamentId}/teams/${team.id}`)}
+            >
               تعديل الفريق
               <Pencil className="h-4 w-4" />
             </DropdownMenuItem>
