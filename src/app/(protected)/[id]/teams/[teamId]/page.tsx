@@ -1,9 +1,16 @@
 import React from "react";
 import EditTeamForm from "@/components/forms/edit-team-form";
-const EditTeamPage = () => {
+
+type EditTeamPageProps = {
+  params: Promise<{ teamId: string }>;
+};
+
+const EditTeamPage = async ({ params }: EditTeamPageProps) => {
+  const { teamId } = await params;
+
   return (
     <div>
-      <EditTeamForm />
+      <EditTeamForm teamId={teamId} />
     </div>
   );
 };

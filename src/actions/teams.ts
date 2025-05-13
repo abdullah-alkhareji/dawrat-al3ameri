@@ -22,7 +22,7 @@ export const createTeam = async (
     });
 
     if (!tournament) {
-      return { success: false, error: "البطولة غير موجودة" };
+      return { success: false, error: "البطولة مو موجودة" };
     }
 
     // Check if either player is already registered in this tournament
@@ -34,7 +34,7 @@ export const createTeam = async (
     });
 
     if (existingPlayers) {
-      return { success: false, error: "اللاعب مسجل مسبقاً في هذه البطولة" };
+      return { success: false, error: "اللاعب مسجل" };
     }
 
     // Check if this exact team combination already exists
@@ -47,7 +47,7 @@ export const createTeam = async (
     });
 
     if (existingTeam) {
-      return { success: false, error: "هذا الفريق مسجل مسبقاً في هذه البطولة" };
+      return { success: false, error: "فريق مسجل" };
     }
 
     const newTeam = await prisma.team.create({
@@ -67,7 +67,7 @@ export const createTeam = async (
     return { success: true, data: newTeam };
   } catch (error) {
     console.error("[TEAM_CREATE]", error);
-    return { success: false, error: "حدث خطأ" };
+    return { success: false, error: "في شي غلط" };
   }
 };
 
@@ -90,7 +90,7 @@ export const getTeam = async (
     return { success: true, data: team };
   } catch (error) {
     console.error("[TEAM_GET]", error);
-    return { success: false, error: "حدث خطأ" };
+    return { success: false, error: "في شي غلط" };
   }
 };
 
@@ -109,7 +109,7 @@ export const getTeamByTournamentId = async (
     return { success: true, data: teams };
   } catch (error) {
     console.error("[TEAM_GET_BY_TOURNAMENT_ID]", error);
-    return { success: false, error: "حدث خطأ" };
+    return { success: false, error: "في شي غلط" };
   }
 };
 
@@ -126,6 +126,45 @@ export const deleteTeam = async (
     return { success: true };
   } catch (error) {
     console.error("[TEAM_DELETE]", error);
-    return { success: false, error: "حدث خطأ" };
+    return { success: false, error: "في شي غلط" };
+  }
+};
+
+export const updateTeam = async (
+  id: string,
+  data: z.infer<typeof applicationFormSchema>
+) => {
+  try {
+    const team = await prisma.team.findUnique({
+      where: { id: id },
+    });
+
+    if (!team) {
+      return { success: false, error: "الفريق مو موجود" };
+    }
+
+    const existingPlayers = await prisma.team.findFirst({
+      where: {
+        OR: [
+          { civilId1: data.civilId1 },
+          { civilId2: data.civilId1 },
+          { civilId1: data.civilId2 },
+          { civilId2: data.civilId2 },
+        ],
+      },
+    });
+    if (existingPlayers && existingPlayers.id !== id) {
+      return { success: false, error: "اللاعب مسجل مع فريق ثاني" };
+    }
+
+    await prisma.team.update({
+      where: { id: id },
+      data: data,
+    });
+    revalidatePath("/[id]/teams", "page");
+    return { success: true };
+  } catch (error) {
+    console.error("[TEAM_UPDATE]", error);
+    return { success: false, error: "في شي غلط" };
   }
 };
