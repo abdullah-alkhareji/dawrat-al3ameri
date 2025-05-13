@@ -11,13 +11,10 @@ export const createTeam = async (
   tournamentId: string
 ): Promise<{ success: boolean; data?: Team; error?: string }> => {
   try {
-    // Check if tournament exists and get its team count
     const tournament = await prisma.tournament.findUnique({
       where: { id: tournamentId },
       include: {
-        _count: {
-          select: { teams: true },
-        },
+        _count: { select: { teams: true } },
       },
     });
 
@@ -25,7 +22,6 @@ export const createTeam = async (
       return { success: false, error: "البطولة مو موجودة" };
     }
 
-    // Check if either player is already registered in this tournament
     const existingPlayers = await prisma.team.findFirst({
       where: {
         tournamentId,
@@ -37,7 +33,6 @@ export const createTeam = async (
       return { success: false, error: "اللاعب مسجل" };
     }
 
-    // Check if this exact team combination already exists
     const existingTeam = await prisma.team.findFirst({
       where: {
         tournamentId,
@@ -50,18 +45,61 @@ export const createTeam = async (
       return { success: false, error: "فريق مسجل" };
     }
 
+    const isBackup = tournament.teamCount <= tournament._count.teams;
+    const teamNumber = tournament._count.teams + 1;
+
     const newTeam = await prisma.team.create({
       data: {
-        tournamentId: tournamentId,
+        tournamentId,
+        teamNumber,
         name1: data.name1,
         name2: data.name2,
         civilId1: data.civilId1,
         civilId2: data.civilId2,
         phone1: data.phone1,
         phone2: data.phone2,
-        backup: tournament.teamCount <= tournament._count.teams,
+        backup: isBackup,
       },
     });
+
+    // ✅ Assign to a match if not backup
+    if (!isBackup) {
+      // Get the highest round number (i.e., first round)
+      const highestRoundMatch = await prisma.match.findFirst({
+        where: { tournamentId },
+        orderBy: { round: "desc" },
+      });
+
+      if (highestRoundMatch) {
+        const firstRoundMatches = await prisma.match.findMany({
+          where: {
+            tournamentId,
+            round: highestRoundMatch.round,
+            OR: [{ team1Id: null }, { team2Id: null }],
+          },
+        });
+
+        // Pick a random empty match
+        const availableSlots = firstRoundMatches.flatMap((match) => {
+          const slots = [];
+          if (!match.team1Id)
+            slots.push({ matchId: match.id, slot: "team1Id" });
+          if (!match.team2Id)
+            slots.push({ matchId: match.id, slot: "team2Id" });
+          return slots;
+        });
+
+        if (availableSlots.length > 0) {
+          const randomSlot =
+            availableSlots[Math.floor(Math.random() * availableSlots.length)];
+          await prisma.match.update({
+            where: { id: randomSlot.matchId },
+            data: { [randomSlot.slot]: newTeam.id },
+          });
+        }
+      }
+    }
+
     revalidatePath("/[id]/teams", "page");
 
     return { success: true, data: newTeam };

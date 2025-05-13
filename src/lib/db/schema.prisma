@@ -22,14 +22,15 @@ model Tournament {
   endDate     DateTime
   lastRegDate DateTime
 
-  teams Team[]
+  teams   Team[]
+  matches Match[]
 
   createdAt DateTime @default(now())
 }
 
 model Team {
   id           String     @id @default(cuid())
-  teamNumber   Int        @unique @default(autoincrement())
+  teamNumber   Int
   tournamentId String
   tournament   Tournament @relation(fields: [tournamentId], references: [id], onDelete: Cascade)
   name1        String
@@ -39,6 +40,10 @@ model Team {
   phone1       String
   phone2       String
   backup       Boolean    @default(false)
+
+  matchesAsTeam1 Match[] @relation("Team1")
+  matchesAsTeam2 Match[] @relation("Team2")
+  matchesWon     Match[] @relation("Winner")
 
   createdAt DateTime @default(now())
 
@@ -117,4 +122,22 @@ model Authenticator {
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@id([userId, credentialID])
+}
+
+model Match {
+  id           String  @id @default(cuid())
+  tournamentId String
+  round        Int // 1 = Final, 2 = Semi, ...
+  matchNumber  Int
+  team1Id      String? // nullable until filled
+  team2Id      String?
+  winnerId     String?
+
+  matchDate DateTime
+  createdAt DateTime @default(now())
+
+  tournament Tournament @relation(fields: [tournamentId], references: [id])
+  team1      Team?      @relation("Team1", fields: [team1Id], references: [id])
+  team2      Team?      @relation("Team2", fields: [team2Id], references: [id])
+  winner     Team?      @relation("Winner", fields: [winnerId], references: [id])
 }

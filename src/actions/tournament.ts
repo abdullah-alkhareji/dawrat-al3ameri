@@ -4,7 +4,8 @@ import prisma from "@/lib/prisma";
 import { revalidatePath } from "next/cache";
 import { z } from "zod";
 import { addTournamentSchema } from "@/lib/scheemas";
-import { Tournament, Team } from "@prisma/client";
+import { Tournament, Team, Match } from "@prisma/client";
+import { generateMatches } from "@/lib/utils";
 
 export const createTournament = async (
   data: z.infer<typeof addTournamentSchema>
@@ -20,6 +21,19 @@ export const createTournament = async (
         lastRegDate: data.lastRegDate,
       },
     });
+
+    let matches: Omit<Match, "id" | "createdAt">[] | null = null;
+
+    if (tournament) {
+      matches = generateMatches(tournament);
+    }
+
+    if (matches) {
+      await prisma.match.createMany({
+        data: matches,
+      });
+    }
+
     revalidatePath("/tournaments");
     return { success: true, data: tournament };
   } catch (error) {
