@@ -15,7 +15,11 @@ import { Separator } from "@/components/ui/separator";
 import { redirect } from "next/navigation";
 // import TournamentNotFound from "./not-found";
 
-const TournamentPage = async ({ params }: { params: { id: string } }) => {
+type TournamentPageProps = {
+  params: Promise<{ id: string }>;
+};
+
+const TournamentPage = async ({ params }: TournamentPageProps) => {
   const { id } = await params;
 
   const { data: tournament, error } = await getTournament(id);

@@ -1,14 +1,15 @@
 import React from "react";
 import { getTournament } from "@/actions/tournament";
 import ApplicationForm from "@/components/forms/application-form";
-import { Tournament, Team } from "@/generated/prisma";
 import { Calendar } from "lucide-react";
 import { redirect } from "next/navigation";
-const ApplicationPage = async ({
-  searchParams,
-}: {
-  searchParams: { id: string };
-}) => {
+import { Team, Tournament } from "@prisma/client";
+
+type ApplicationPageProps = {
+  searchParams: Promise<{ id: string }>;
+};
+
+const ApplicationPage = async ({ searchParams }: ApplicationPageProps) => {
   const { id } = await searchParams;
 
   if (!id) {

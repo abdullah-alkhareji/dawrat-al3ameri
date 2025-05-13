@@ -6,7 +6,11 @@ import React from "react";
 import { DataTable } from "@/components/ui/data-table";
 import { columns } from "./_columns";
 
-const TeamsPage = async ({ params }: { params: { id: string } }) => {
+type TeamsPageProps = {
+  params: Promise<{ id: string }>;
+};
+
+const TeamsPage = async ({ params }: TeamsPageProps) => {
   const { id } = await params;
   if (!id) {
     redirect("/");

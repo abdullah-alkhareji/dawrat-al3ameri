@@ -7,7 +7,7 @@ import {
   DropdownMenuTrigger,
   DropdownMenuContent,
 } from "@/components/ui/dropdown-menu";
-import { Team } from "@/generated/prisma";
+import { Team } from "@prisma/client";
 import { ColumnDef } from "@tanstack/react-table";
 import { MoreHorizontal, Trash, Pencil } from "lucide-react";
 import DataTableHeaderCell from "@/components/ui/data-table-header-cell";
@@ -23,6 +23,7 @@ const handleDeleteTeam = async (id: string) => {
     toast.error(error || "حدث خطأ أثناء حذف الفريق");
   }
 };
+
 export const columns: ColumnDef<Team>[] = [
   {
     accessorKey: "teamNumber",

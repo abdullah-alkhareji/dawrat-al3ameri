@@ -3,11 +3,11 @@ import { getTeam } from "@/actions/teams";
 import { redirect } from "next/navigation";
 import { Calendar, MapPin } from "lucide-react";
 
-const ReviewPage = async ({
-  searchParams,
-}: {
-  searchParams: { id: string };
-}) => {
+type ReviewPageProps = {
+  searchParams: Promise<{ id: string }>;
+};
+
+const ReviewPage = async ({ searchParams }: ReviewPageProps) => {
   const { id } = await searchParams;
 
   if (!id) {
