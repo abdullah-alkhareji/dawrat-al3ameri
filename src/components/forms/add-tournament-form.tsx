@@ -21,6 +21,8 @@ import { toast } from "sonner";
 import { createTournament } from "@/actions/tournament";
 import { addTournamentSchema } from "@/lib/scheemas";
 import { Loader2 } from "lucide-react";
+import { SelectButtonRoot, SelectButtonItem } from "../ui/select-button";
+
 const AddTournamentForm = () => {
   const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
@@ -85,16 +87,26 @@ const AddTournamentForm = () => {
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>عدد الفرق</FormLabel>
-                  <FormDescription>لازم يكون عدد الفرق زوجي</FormDescription>
+                  <FormDescription>جم فرق راح يشارك؟</FormDescription>
                   <FormControl>
-                    <Input
-                      type="number"
-                      min={2}
-                      {...field}
-                      onChange={(e) => field.onChange(parseInt(e.target.value))}
-                      step={2}
+                    <SelectButtonRoot
+                      value={field.value}
+                      onValueChange={(value) => field.onChange(Number(value))}
                       disabled={isLoading}
-                    />
+                    >
+                      <SelectButtonItem value={2}>2</SelectButtonItem>
+                      <SelectButtonItem value={4}>4</SelectButtonItem>
+                      <SelectButtonItem value={8}>8</SelectButtonItem>
+                      <SelectButtonItem value={16}>16</SelectButtonItem>
+                      <SelectButtonItem value={32}>32</SelectButtonItem>
+                      <SelectButtonItem value={64}>64</SelectButtonItem>
+                      <SelectButtonItem value={128}>128</SelectButtonItem>
+                      <SelectButtonItem value={256}>256</SelectButtonItem>
+                      <SelectButtonItem value={512}>512</SelectButtonItem>
+                      <SelectButtonItem value={1024}>1024</SelectButtonItem>
+                      <SelectButtonItem value={2048}>2048</SelectButtonItem>
+                      <SelectButtonItem value={4096}>4096</SelectButtonItem>
+                    </SelectButtonRoot>
                   </FormControl>
                   <FormMessage />
                 </FormItem>

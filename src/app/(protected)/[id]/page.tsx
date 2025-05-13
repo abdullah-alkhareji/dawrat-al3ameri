@@ -23,7 +23,7 @@ const TournamentPage = async ({ params }: TournamentPageProps) => {
   const { id } = await params;
 
   const { data: tournament, error } = await getTournament(id);
-  
+
   if (error) {
     return <div>{error}</div>;
   }
@@ -35,7 +35,7 @@ const TournamentPage = async ({ params }: TournamentPageProps) => {
   const baseUrl = process.env.NEXT_PUBLIC_APP_URL;
 
   return (
-    <div className="flex flex-col gap-2">
+    <div className="flex flex-col gap-4">
       <div className="flex items-center justify-between">
         <h1 className="text-2xl font-bold">{tournament?.name}</h1>
         <Button variant="ghost" size="icon">

@@ -19,22 +19,22 @@ export const applicationFormSchema = z.object({
     message: "مطلوب",
   }),
   civilId1: z
-    .string()
+    .string({ required_error: "مطلوب" })
     .min(12, { message: "الرقم المدني يجب ان يكون 12 أرقام" })
     .max(12, { message: "الرقم المدني يجب ان يكون 12 أرقام" })
     .regex(/^\d+$/, { message: "يجب ان يحتوي على ارقام فقط" }),
   civilId2: z
-    .string()
+    .string({ required_error: "مطلوب" })
     .min(12, { message: "الرقم المدني يجب ان يكون 12 أرقام" })
     .max(12, { message: "الرقم المدني يجب ان يكون 12 أرقام" })
     .regex(/^\d+$/, { message: "يجب ان يحتوي على ارقام فقط" }),
   phone1: z
-    .string()
+    .string({ required_error: "مطلوب" })
     .min(8, { message: "رقم الهاتف يجب ان يكون 8 أرقام" })
     .max(8, { message: "رقم الهاتف يجب ان يكون 8 أرقام" })
     .regex(/^\d+$/, { message: "يجب ان يحتوي على ارقام فقط" }),
   phone2: z
-    .string()
+    .string({ required_error: "مطلوب" })
     .min(8, { message: "رقم الهاتف يجب ان يكون 8 أرقام" })
     .max(8, { message: "رقم الهاتف يجب ان يكون 8 أرقام" })
     .regex(/^\d+$/, { message: "يجب ان يحتوي على ارقام فقط" }),
@@ -59,4 +59,33 @@ export const registerSchema = z.object({
   password: z.string({ required_error: "مطلوب" }).min(8, {
     message: "عالاقل 8 حروف",
   }),
+});
+
+export const editTeamSchema = z.object({
+  name1: z.string({ required_error: "مطلوب" }).min(1, {
+    message: "مطلوب",
+  }),
+  name2: z.string({ required_error: "مطلوب" }).min(1, {
+    message: "مطلوب",
+  }),
+  civilId1: z
+    .string({ required_error: "مطلوب" })
+    .min(12, { message: "الرقم المدني يجب ان يكون 12 أرقام" })
+    .max(12, { message: "الرقم المدني يجب ان يكون 12 أرقام" })
+    .regex(/^\d+$/, { message: "يجب ان يحتوي على ارقام فقط" }),
+  civilId2: z
+    .string({ required_error: "مطلوب" })
+    .min(12, { message: "الرقم المدني يجب ان يكون 12 أرقام" })
+    .max(12, { message: "الرقم المدني يجب ان يكون 12 أرقام" })
+    .regex(/^\d+$/, { message: "يجب ان يحتوي على ارقام فقط" }),
+  phone1: z
+    .string({ required_error: "مطلوب" })
+    .min(8, { message: "رقم الهاتف يجب ان يكون 8 أرقام" })
+    .max(8, { message: "رقم الهاتف يجب ان يكون 8 أرقام" })
+    .regex(/^\d+$/, { message: "يجب ان يحتوي على ارقام فقط" }),
+  phone2: z
+    .string({ required_error: "مطلوب" })
+    .min(8, { message: "رقم الهاتف يجب ان يكون 8 أرقام" })
+    .max(8, { message: "رقم الهاتف يجب ان يكون 8 أرقام" })
+    .regex(/^\d+$/, { message: "يجب ان يحتوي على ارقام فقط" }),
 });
