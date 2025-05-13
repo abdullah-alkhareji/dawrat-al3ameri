@@ -1,10 +1,12 @@
 import { getTeamByTournamentId } from "@/actions/teams";
 import { getTournament } from "@/actions/tournament";
-import { Calendar } from "lucide-react";
+import { ArrowLeft, Calendar } from "lucide-react";
 import { redirect } from "next/navigation";
 import React from "react";
 import { DataTable } from "@/components/ui/data-table";
 import { columns } from "./_columns";
+import { Button } from "@/components/ui/button";
+import Link from "next/link";
 
 type TeamsPageProps = {
   params: Promise<{ id: string }>;
@@ -29,7 +31,15 @@ const TeamsPage = async ({ params }: TeamsPageProps) => {
   return (
     <div className="space-y-4">
       <div className="flex flex-col gap-2 col-span-1 bg-card p-4 rounded-lg">
-        <h1 className="text-xl font-bold">البطولة</h1>
+        <div className="flex items-center justify-between">
+          <h1 className="text-xl font-bold">البطولة</h1>
+
+          <Button variant="ghost" size="icon">
+            <Link href={`/${id}`}>
+              <ArrowLeft className="size-6" />
+            </Link>
+          </Button>
+        </div>
         <p className="text-foreground ">
           اسم البطولة:{" "}
           <span className="text-muted-foreground">{tournament?.name}</span>
