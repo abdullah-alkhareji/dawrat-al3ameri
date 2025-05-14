@@ -1,3 +1,5 @@
+// src/actions/teams.ts
+
 "use server";
 
 import { Team, Tournament } from "@prisma/client";
@@ -9,7 +11,12 @@ import { revalidatePath } from "next/cache";
 export const createTeam = async (
   data: z.infer<typeof applicationFormSchema>,
   tournamentId: string
-): Promise<{ success: boolean; data?: Team; error?: string }> => {
+): Promise<{
+  success: boolean;
+  data?: Team;
+  groupCode?: string;
+  error?: string;
+}> => {
   try {
     const tournament = await prisma.tournament.findUnique({
       where: { id: tournamentId },
@@ -22,17 +29,24 @@ export const createTeam = async (
       return { success: false, error: "البطولة مو موجودة" };
     }
 
+    // Check for duplicate player
     const existingPlayers = await prisma.team.findFirst({
       where: {
         tournamentId,
-        OR: [{ civilId1: data.civilId1 }, { civilId2: data.civilId1 }],
+        OR: [
+          { civilId1: data.civilId1 },
+          { civilId2: data.civilId1 },
+          { civilId1: data.civilId2 },
+          { civilId2: data.civilId2 },
+        ],
       },
     });
 
     if (existingPlayers) {
-      return { success: false, error: "اللاعب مسجل" };
+      return { success: false, error: "اللاعب مسجل مع فريق ثاني" };
     }
 
+    // Check for duplicate team
     const existingTeam = await prisma.team.findFirst({
       where: {
         tournamentId,
@@ -42,29 +56,16 @@ export const createTeam = async (
     });
 
     if (existingTeam) {
-      return { success: false, error: "فريق مسجل" };
+      return { success: false, error: "الفريق مسجل من قبل" };
     }
 
-    const isBackup = tournament.teamCount <= tournament._count.teams;
+    const isBackup = tournament._count.teams >= tournament.teamCount;
     const teamNumber = tournament._count.teams + 1;
+    let assignedGroupCode: string | undefined = undefined;
+    let newTeam: Team | null = null;
 
-    const newTeam = await prisma.team.create({
-      data: {
-        tournamentId,
-        teamNumber,
-        name1: data.name1,
-        name2: data.name2,
-        civilId1: data.civilId1,
-        civilId2: data.civilId2,
-        phone1: data.phone1,
-        phone2: data.phone2,
-        backup: isBackup,
-      },
-    });
-
-    // ✅ Assign to a match if not backup
+    // Try to assign to a match if not a backup
     if (!isBackup) {
-      // Get the highest round number (i.e., first round)
       const highestRoundMatch = await prisma.match.findFirst({
         where: { tournamentId },
         orderBy: { round: "desc" },
@@ -77,35 +78,88 @@ export const createTeam = async (
             round: highestRoundMatch.round,
             OR: [{ team1Id: null }, { team2Id: null }],
           },
+          select: {
+            id: true,
+            groupCode: true,
+            team1Id: true,
+            team2Id: true,
+          },
         });
 
-        // Pick a random empty match
-        const availableSlots = firstRoundMatches.flatMap((match) => {
-          const slots = [];
-          if (!match.team1Id)
-            slots.push({ matchId: match.id, slot: "team1Id" });
-          if (!match.team2Id)
-            slots.push({ matchId: match.id, slot: "team2Id" });
-          return slots;
-        });
+        const grouped: Record<string, typeof firstRoundMatches> = {};
+        for (const match of firstRoundMatches) {
+          if (!match.groupCode) continue;
+          grouped[match.groupCode] ||= [];
+          grouped[match.groupCode].push(match);
+        }
 
-        if (availableSlots.length > 0) {
-          const randomSlot =
-            availableSlots[Math.floor(Math.random() * availableSlots.length)];
-          await prisma.match.update({
-            where: { id: randomSlot.matchId },
-            data: { [randomSlot.slot]: newTeam.id },
+        const groupCodes = Object.keys(grouped);
+        if (groupCodes.length > 0) {
+          const randomGroup =
+            groupCodes[Math.floor(Math.random() * groupCodes.length)];
+          const matches = grouped[randomGroup];
+
+          const availableSlots = matches.flatMap((match) => {
+            const slots = [];
+            if (!match.team1Id)
+              slots.push({ matchId: match.id, slot: "team1Id" });
+            if (!match.team2Id)
+              slots.push({ matchId: match.id, slot: "team2Id" });
+            return slots;
           });
+
+          if (availableSlots.length > 0) {
+            assignedGroupCode = randomGroup;
+            newTeam = await prisma.team.create({
+              data: {
+                tournamentId,
+                teamNumber,
+                name1: data.name1,
+                name2: data.name2,
+                civilId1: data.civilId1,
+                civilId2: data.civilId2,
+                phone1: data.phone1,
+                phone2: data.phone2,
+                backup: false,
+                groupCode: assignedGroupCode,
+              },
+            });
+
+            const randomSlot =
+              availableSlots[Math.floor(Math.random() * availableSlots.length)];
+            await prisma.match.update({
+              where: { id: randomSlot.matchId },
+              data: { [randomSlot.slot]: newTeam.id },
+            });
+          }
         }
       }
     }
 
+    // If not assigned to match, fallback to backup
+    if (!newTeam) {
+      newTeam = await prisma.team.create({
+        data: {
+          tournamentId,
+          teamNumber,
+          name1: data.name1,
+          name2: data.name2,
+          civilId1: data.civilId1,
+          civilId2: data.civilId2,
+          phone1: data.phone1,
+          phone2: data.phone2,
+          backup: true,
+          groupCode: null,
+        },
+      });
+    }
+
     revalidatePath("/[id]/teams", "page");
 
-    return { success: true, data: newTeam };
+    return { success: true, data: newTeam, groupCode: assignedGroupCode };
   } catch (error) {
     console.error("[TEAM_CREATE]", error);
-    return { success: false, error: "في شي غلط" };
+    return { success: false, error: "في مشكلة أثناء التسجيل" };
   }
 };
 
@@ -118,13 +172,12 @@ export const getTeam = async (
 }> => {
   try {
     const team = await prisma.team.findUnique({
-      where: {
-        id: id,
-      },
+      where: { id },
       include: {
         tournament: true,
       },
     });
+
     return { success: true, data: team };
   } catch (error) {
     console.error("[TEAM_GET]", error);
@@ -137,13 +190,10 @@ export const getTeamByTournamentId = async (
 ): Promise<{ success: boolean; data?: Team[]; error?: string }> => {
   try {
     const teams = await prisma.team.findMany({
-      where: {
-        tournamentId: tournamentId,
-      },
-      orderBy: {
-        teamNumber: "asc",
-      },
+      where: { tournamentId },
+      orderBy: { teamNumber: "asc" },
     });
+
     return { success: true, data: teams };
   } catch (error) {
     console.error("[TEAM_GET_BY_TOURNAMENT_ID]", error);

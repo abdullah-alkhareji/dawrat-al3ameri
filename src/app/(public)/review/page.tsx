@@ -1,3 +1,5 @@
+// src/app/(public)/review/page.tsx
+
 import React from "react";
 import { getTeam } from "@/actions/teams";
 import { redirect } from "next/navigation";
@@ -51,6 +53,12 @@ const ReviewPage = async ({ searchParams }: ReviewPageProps) => {
             {team?.tournament?.name}
           </span>
         </p>
+        {team?.groupCode && (
+          <p className="text-muted-foreground text-center text-sm">
+            راح تلعب في مجموعة:{" "}
+            <span className="font-bold">{team.groupCode}</span>
+          </p>
+        )}
         <div className="flex items-center gap-2">
           <p className="text-sm text-muted-foreground flex items-center gap-2">
             <Calendar className="size-4 text-primary" />

@@ -1,3 +1,5 @@
+// src/app/(public)/apply/page.tsx
+
 import React from "react";
 import { getTournament } from "@/actions/tournament";
 import ApplicationForm from "@/components/forms/application-form";
