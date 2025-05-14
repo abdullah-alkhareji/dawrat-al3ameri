@@ -1,16 +1,20 @@
+// src/actions/tournament.ts
+
 "use server";
 
 import prisma from "@/lib/prisma";
 import { revalidatePath } from "next/cache";
 import { z } from "zod";
 import { addTournamentSchema } from "@/lib/scheemas";
-import { Tournament, Team, Match } from "@prisma/client";
-import { generateMatches } from "@/lib/utils";
+import { Tournament, Team } from "@prisma/client";
+import { saveBracketToDatabase } from "@/lib/save-bracket";
+import { generateEmptyBracket } from "@/lib/generate-bracket";
 
 export const createTournament = async (
   data: z.infer<typeof addTournamentSchema>
 ): Promise<{ success: boolean; data?: Tournament; error?: string }> => {
   try {
+    // 1. Create tournament
     const tournament = await prisma.tournament.create({
       data: {
         name: data.name,
@@ -22,19 +26,15 @@ export const createTournament = async (
       },
     });
 
-    let matches: Omit<Match, "id" | "createdAt">[] | null = null;
+    // 2. Generate empty bracket
+    const bracket = generateEmptyBracket(tournament.teamCount);
 
-    if (tournament) {
-      matches = generateMatches(tournament);
-    }
+    // 3. Save to DB
+    await saveBracketToDatabase(tournament.id, bracket, "Main");
 
-    if (matches) {
-      await prisma.match.createMany({
-        data: matches,
-      });
-    }
-
+    // 4. Revalidate
     revalidatePath("/tournaments");
+
     return { success: true, data: tournament };
   } catch (error) {
     console.error("[TOURNAMENT_CREATE]", error);
