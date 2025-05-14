@@ -1,3 +1,5 @@
+// src/app/(protected)/[id]/_components/tournament-info.tsx
+
 import { ArrowLeft, Calendar } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Tournament } from "@prisma/client";

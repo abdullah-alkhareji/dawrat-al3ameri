@@ -1,3 +1,5 @@
+// src/app/(protected)/[id]/matches/page.tsx
+
 import React from "react";
 import TournamentInfo from "../_components/tournament-info";
 import { redirect } from "next/navigation";
@@ -17,6 +19,7 @@ const MatchesPage = async ({ params }: MatchesPageProps) => {
   const { data: tournament, error: tournamentError } = await getTournament(id);
   const { data: matches, error } = await getMatchesByTournamentId(id);
 
+  console.log({ matches });
 
   if (error || tournamentError) {
     redirect("/");

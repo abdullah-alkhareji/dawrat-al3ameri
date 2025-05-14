@@ -7,8 +7,7 @@ import { revalidatePath } from "next/cache";
 import { z } from "zod";
 import { addTournamentSchema } from "@/lib/scheemas";
 import { Tournament, Team } from "@prisma/client";
-import { saveBracketToDatabase } from "@/lib/save-bracket";
-import { generateEmptyBracket } from "@/lib/generate-bracket";
+import { scheduleFullTournament } from "@/lib/schedule-full-tournament";
 
 export const createTournament = async (
   data: z.infer<typeof addTournamentSchema>
@@ -26,11 +25,13 @@ export const createTournament = async (
       },
     });
 
-    // 2. Generate empty bracket
-    const bracket = generateEmptyBracket(tournament.teamCount);
-
-    // 3. Save to DB
-    await saveBracketToDatabase(tournament.id, bracket, "Main");
+    // 2. Schedule full tournament
+    await scheduleFullTournament({
+      tournamentId: tournament.id,
+      teamCount: tournament.teamCount,
+      startDate: tournament.startDate,
+      tableCount: 16, // or 32 if needed
+    });
 
     // 4. Revalidate
     revalidatePath("/tournaments");

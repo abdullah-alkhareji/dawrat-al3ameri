@@ -1,3 +1,5 @@
+// src/app/(protected)/[id]/matches/_components/matches-list.tsx
+
 "use client";
 
 import React, { useEffect, useState } from "react";
@@ -75,7 +77,6 @@ const MatchesList = ({ matches }: MatchesListProps) => {
     setTeamNumber(finalValue);
   };
 
-  console.log({ rounds });
   if (isLoading) {
     return (
       <div className="flex items-center justify-center h-full">

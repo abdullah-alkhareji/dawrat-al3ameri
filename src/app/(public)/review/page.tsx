@@ -37,13 +37,20 @@ const ReviewPage = async ({ searchParams }: ReviewPageProps) => {
   return (
     <div className="w-full h-full max-w-screen-2xl mx-auto flex flex-col gap-4">
       <h1 className="text-3xl lg:text-5xl font-bold text-center ">كبجرها 💾</h1>
-      <div className="flex flex-col items-center justify-center gap-4 bg-card rounded-lg ">
+      <div className="flex flex-col items-center justify-center gap-4 bg-card rounded-lg p-4">
         <h3 className="text-center">فريقك رقم</h3>
         <div className="flex justify-center">
           <h1 className="text-9xl font-bold text-center mb-4">
             {team?.teamNumber}
           </h1>
         </div>
+
+        {team?.groupCode && (
+          <p className="text-muted-foreground text-center text-sm">
+            راح تلعب في مجموعة:{" "}
+            <span className="font-bold">{team.groupCode}</span>
+          </p>
+        )}
       </div>
       <div className="flex flex-col gap-2 col-span-1 bg-card p-4 rounded-lg">
         <h1 className="text-xl font-bold">البطولة</h1>
@@ -53,12 +60,6 @@ const ReviewPage = async ({ searchParams }: ReviewPageProps) => {
             {team?.tournament?.name}
           </span>
         </p>
-        {team?.groupCode && (
-          <p className="text-muted-foreground text-center text-sm">
-            راح تلعب في مجموعة:{" "}
-            <span className="font-bold">{team.groupCode}</span>
-          </p>
-        )}
         <div className="flex items-center gap-2">
           <p className="text-sm text-muted-foreground flex items-center gap-2">
             <Calendar className="size-4 text-primary" />

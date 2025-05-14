@@ -12,7 +12,7 @@ function generateEmptyBracket(teamCount: number): PartialMatch[][] {
 
   let matchCount = teamCount / 2;
 
-  for (let r = 1; r <= totalRounds; r++) {
+  for (let r = totalRounds; r >= 1; r--) {
     const round: PartialMatch[] = [];
     for (let m = 0; m < matchCount; m++) {
       round.push({
@@ -24,7 +24,7 @@ function generateEmptyBracket(teamCount: number): PartialMatch[][] {
         startTime: null,
         tableNumber: null,
         groupCode: null,
-        matchDate: new Date(0),
+        matchDate: new Date(),
         tournamentId: "",
       });
     }
