@@ -17,9 +17,11 @@ import {
 import { toast } from "sonner";
 import { registerSchema } from "@/lib/scheemas";
 import { register } from "@/actions/auth";
-
+import { useState } from "react";
+import { Loader2 } from "lucide-react";
 const RegisterForm = () => {
   const router = useRouter();
+  const [isLoading, setIsLoading] = useState(false);
 
   const form = useForm<z.infer<typeof registerSchema>>({
     resolver: zodResolver(registerSchema),
@@ -31,6 +33,7 @@ const RegisterForm = () => {
   });
 
   const handleSubmit = async (values: z.infer<typeof registerSchema>) => {
+    setIsLoading(true);
     const result = await register(values);
 
     if (!result.success) {
@@ -40,6 +43,7 @@ const RegisterForm = () => {
       form.reset();
       router.push("/login");
     }
+    setIsLoading(false);
   };
 
   return (
@@ -52,7 +56,12 @@ const RegisterForm = () => {
             <FormItem>
               <FormLabel>الاسم</FormLabel>
               <FormControl>
-                <Input {...field} type="text" autoComplete="name" />
+                <Input
+                  {...field}
+                  type="text"
+                  autoComplete="name"
+                  disabled={isLoading}
+                />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -65,7 +74,12 @@ const RegisterForm = () => {
             <FormItem>
               <FormLabel>الايميل</FormLabel>
               <FormControl>
-                <Input {...field} type="email" autoComplete="email" />
+                <Input
+                  {...field}
+                  type="email"
+                  autoComplete="email"
+                  disabled={isLoading}
+                />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -78,14 +92,19 @@ const RegisterForm = () => {
             <FormItem>
               <FormLabel>كلمة السر</FormLabel>
               <FormControl>
-                <Input {...field} type="password" autoComplete="new-password" />
+                <Input
+                  {...field}
+                  type="password"
+                  autoComplete="new-password"
+                  disabled={isLoading}
+                />
               </FormControl>
               <FormMessage />
             </FormItem>
           )}
         />
-        <Button className="w-full" type="submit">
-          تسجيل
+        <Button className="w-full" type="submit" disabled={isLoading}>
+          {isLoading ? <Loader2 className="size-4 animate-spin" /> : "تسجيل"}
         </Button>
       </form>
     </Form>

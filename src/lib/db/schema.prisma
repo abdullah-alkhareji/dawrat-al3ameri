@@ -13,9 +13,9 @@ model Tournament {
   id          String   @id @default(cuid())
   name        String
   teamCount   Int
+  tableCount  Int // ✅ NEW FIELD
   location    String?
   startDate   DateTime
-  endDate     DateTime
   lastRegDate DateTime
 
   teams   Team[]
@@ -36,7 +36,7 @@ model Team {
   phone1       String
   phone2       String
   backup       Boolean    @default(false)
-  groupCode    String?    // 🆕 Add this!
+  groupCode    String? // 🆕 Add this!
 
   matchesAsTeam1 Match[] @relation("Team1")
   matchesAsTeam2 Match[] @relation("Team2")
@@ -49,7 +49,6 @@ model Team {
   @@unique([tournamentId, civilId2])
   @@map("teams")
 }
-
 
 model User {
   id            String          @id @default(cuid())

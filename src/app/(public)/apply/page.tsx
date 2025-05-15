@@ -52,11 +52,6 @@ const ApplicationPage = async ({ searchParams }: ApplicationPageProps) => {
                 <Calendar className="size-4 text-primary" />
                 {tournament?.startDate.toLocaleDateString()}
               </p>
-              <span className="text-muted-foreground">-</span>
-              <p className="text-sm text-muted-foreground flex items-center gap-2">
-                <Calendar className="size-4 text-primary" />
-                {tournament?.endDate.toLocaleDateString()}
-              </p>
             </div>
           </div>
 

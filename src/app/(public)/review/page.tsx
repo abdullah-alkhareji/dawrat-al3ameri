@@ -65,11 +65,6 @@ const ReviewPage = async ({ searchParams }: ReviewPageProps) => {
             <Calendar className="size-4 text-primary" />
             {team?.tournament?.startDate.toLocaleDateString()}
           </p>
-          <span className="text-muted-foreground">-</span>
-          <p className="text-sm text-muted-foreground flex items-center gap-2">
-            <Calendar className="size-4 text-primary" />
-            {team?.tournament?.endDate.toLocaleDateString()}
-          </p>
         </div>
         {team?.tournament?.location && (
           <p className="text-foreground flex items-center gap-2">

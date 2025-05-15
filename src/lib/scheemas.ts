@@ -1,3 +1,5 @@
+// src/lib/scheemas.ts
+
 import { z } from "zod";
 
 export const addTournamentSchema = z.object({
@@ -5,8 +7,10 @@ export const addTournamentSchema = z.object({
   teamCount: z.number({ required_error: "مطلوب" }).min(2, {
     message: "اقل شي فريقين",
   }),
+  tableCount: z.number({ required_error: "مطلوب" }).min(1, {
+    message: "اقل شي 1 ",
+  }),
   startDate: z.date({ required_error: "مطلوب" }),
-  endDate: z.date({ required_error: "مطلوب" }),
   lastRegDate: z.date({ required_error: "مطلوب" }),
   location: z.string({ required_error: "مطلوب" }),
 });

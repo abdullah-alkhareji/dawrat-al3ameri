@@ -1,3 +1,5 @@
+// src/components/forms/add-tournament-form.tsx
+
 "use client";
 
 import React, { useState } from "react";
@@ -31,8 +33,8 @@ const AddTournamentForm = () => {
     defaultValues: {
       name: "",
       teamCount: 2,
+      tableCount: 16,
       startDate: undefined,
-      endDate: undefined,
       lastRegDate: undefined,
       location: "",
     },
@@ -90,6 +92,7 @@ const AddTournamentForm = () => {
                   <FormDescription>جم فرق راح يشارك؟</FormDescription>
                   <FormControl>
                     <SelectButtonRoot
+                      size="sm"
                       value={field.value}
                       onValueChange={(value) => field.onChange(Number(value))}
                       disabled={isLoading}
@@ -103,9 +106,6 @@ const AddTournamentForm = () => {
                       <SelectButtonItem value={128}>128</SelectButtonItem>
                       <SelectButtonItem value={256}>256</SelectButtonItem>
                       <SelectButtonItem value={512}>512</SelectButtonItem>
-                      <SelectButtonItem value={1024}>1024</SelectButtonItem>
-                      <SelectButtonItem value={2048}>2048</SelectButtonItem>
-                      <SelectButtonItem value={4096}>4096</SelectButtonItem>
                     </SelectButtonRoot>
                   </FormControl>
                   <FormMessage />
@@ -136,17 +136,20 @@ const AddTournamentForm = () => {
           <div className="col-span-1 p-4 border rounded-md">
             <FormField
               control={form.control}
-              name="endDate"
+              name="tableCount"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>لي</FormLabel>
-                  <FormDescription>اخر يوم للبطولة</FormDescription>
+                  <FormLabel>عدد الطاولات</FormLabel>
+                  <FormDescription>
+                    جم طاولة راح توفر؟ جم قييم بنفس الوقت؟!
+                  </FormDescription>
                   <FormControl>
-                    <DatePicker
-                      date={field.value}
-                      onDateChange={field.onChange}
-                      disabled={isLoading || !form.watch("startDate")}
-                      fromDate={form.watch("startDate")}
+                    <Input
+                      type="number"
+                      value={field.value}
+                      onChange={(e) => field.onChange(Number(e.target.value))}
+                      disabled={isLoading}
+                      className="w-full"
                     />
                   </FormControl>
                   <FormMessage />
