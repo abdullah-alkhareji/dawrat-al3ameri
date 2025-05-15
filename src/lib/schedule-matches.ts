@@ -35,21 +35,26 @@ export function scheduleSubTournamentMatches({
     groupedByRound[match.round].push(match);
   }
 
-  let currentDay = new Date(startDate);
-  let slotIndex = 0;
+  const currentDay = new Date(startDate);
   const scheduled: Match[] = [];
 
   const sortedRounds = Object.keys(groupedByRound)
     .map(Number)
-    .sort((a, b) => b - a); // Round 5 → Round 1
+    .sort((a, b) => b - a);
 
-  for (let roundIdx = 0; roundIdx < sortedRounds.length; roundIdx++) {
-    const round = sortedRounds[roundIdx];
+  const isDualGroup =
+    matches.some((m) => m.groupCode?.endsWith("-A")) &&
+    matches.some((m) => m.groupCode?.endsWith("-B")) &&
+    tableCount <= 16;
+
+  if (sortedRounds.length > 0) {
+    const round = sortedRounds[0];
     const roundMatches = groupedByRound[round];
 
-    // Round 1: groupA at slot 0, groupB at slot 1
-    if (roundIdx === 0) {
-      const groups = [...new Set(roundMatches.map((m) => m.groupCode))];
+    const groups = [...new Set(roundMatches.map((m) => m.groupCode))];
+    const useSeparateSlots = isDualGroup;
+
+    if (useSeparateSlots) {
       for (let g = 0; g < groups.length; g++) {
         const groupMatches = roundMatches.filter(
           (m) => m.groupCode === groups[g]
@@ -61,23 +66,42 @@ export function scheduleSubTournamentMatches({
         for (let i = 0; i < groupMatches.length; i++) {
           const match = groupMatches[i];
           match.startTime = new Date(slotTime);
-          match.tableNumber = (i % tableCount) + 1;
           match.matchDate = new Date(slotTime);
+          match.tableNumber = (i % tableCount) + 1;
           scheduled.push(match);
         }
       }
-      slotIndex = groups.length; // Start next round after initial groups
     } else {
+      const [hour, minute] = timeSlots[0].split(":").map(Number);
+      const slotTime = new Date(currentDay);
+      slotTime.setHours(hour, minute, 0, 0);
+
+      for (let i = 0; i < roundMatches.length; i++) {
+        const match = roundMatches[i];
+        match.startTime = new Date(slotTime);
+        match.matchDate = new Date(slotTime);
+        match.tableNumber = (i % tableCount) + 1;
+        scheduled.push(match);
+      }
+    }
+
+    let slotIndex = isDualGroup ? 2 : 1;
+    let matchDay = new Date(currentDay);
+
+    for (let i = 1; i < sortedRounds.length; i++) {
+      const round = sortedRounds[i];
+      const roundMatches = groupedByRound[round];
       let matchIndex = 0;
+
       while (matchIndex < roundMatches.length) {
         if (slotIndex >= timeSlots.length) {
-          currentDay = getNextTournamentDay(currentDay);
-          slotIndex = 0;
+          matchDay = getNextTournamentDay(matchDay);
+          slotIndex = isDualGroup ? 2 : 0;
         }
 
-        const [hour, minute] = timeSlots[slotIndex].split(":").map(Number);
-        const slotTime = new Date(currentDay);
-        slotTime.setHours(hour, minute, 0, 0);
+        const [h, m] = timeSlots[slotIndex].split(":").map(Number);
+        const slotTime = new Date(matchDay);
+        slotTime.setHours(h, m, 0, 0);
 
         for (
           let t = 0;
@@ -86,8 +110,8 @@ export function scheduleSubTournamentMatches({
         ) {
           const match = roundMatches[matchIndex];
           match.startTime = new Date(slotTime);
-          match.tableNumber = t + 1;
           match.matchDate = new Date(slotTime);
+          match.tableNumber = t + 1;
           scheduled.push(match);
           matchIndex++;
         }
@@ -98,4 +122,33 @@ export function scheduleSubTournamentMatches({
   }
 
   return scheduled;
+}
+
+export function validateSchedule(matches: Match[]): string[] {
+  const errors: string[] = [];
+  const grouped = matches.reduce<Record<number, Match[]>>((acc, match) => {
+    if (!acc[match.round]) acc[match.round] = [];
+    acc[match.round].push(match);
+    return acc;
+  }, {});
+
+  const rounds = Object.keys(grouped)
+    .map(Number)
+    .sort((a, b) => b - a);
+  let lastTime = new Date(0);
+
+  for (const round of rounds) {
+    for (const match of grouped[round]) {
+      if (match.startTime && match.startTime < lastTime) {
+        errors.push(
+          `⛔ Round ${round} match at ${match.startTime.toISOString()} is before previous round time ${lastTime.toISOString()}`
+        );
+      }
+      if (match.startTime && match.startTime > lastTime) {
+        lastTime = new Date(match.startTime);
+      }
+    }
+  }
+
+  return errors;
 }
