@@ -29,17 +29,13 @@ export function ErrorPage({
   return (
     <div className="flex h-screen w-full flex-col items-center justify-center space-y-4 text-center">
       <div className="space-y-2">
-        <h1 className="text-4xl font-bold tracking-tighter">
-          حدث خطأ غير متوقع
-        </h1>
-        <p className="text-muted-foreground">
-          نعتذر عن الخطأ. الرجاء المحاولة مرة أخرى.
-        </p>
+        <h1 className="text-4xl font-bold tracking-tighter">في شيل غلط!!</h1>
+        <p className="text-muted-foreground">نعتذر عن الخطأ. جرب مرة ثانية.</p>
       </div>
       <div className="flex items-center gap-2">
-        <Button onClick={() => reset()}>إعادة المحاولة</Button>
+        <Button onClick={() => reset()}>مرة ثانية</Button>
         <Button variant="outline" onClick={() => router.push("/")}>
-          العودة للصفحة الرئيسية
+          للصفحة الرئيسية
         </Button>
       </div>
     </div>
