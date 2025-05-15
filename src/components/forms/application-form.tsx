@@ -53,7 +53,8 @@ const ApplicationForm = ({
       toast.success("مبروك, تسجل في البطولة👌");
       form.reset();
       setError(null);
-      router.push(`/review?id=${result.data?.id}`);
+      // Redirect to the new success page
+      router.push(`/registration-success?id=${result.data?.id}`);
     } catch (error: unknown) {
       const errorMessage =
         error instanceof Error ? error.message : "صار شي غلط";
