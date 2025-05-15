@@ -11,7 +11,6 @@ const executeAction = async <T>({
 }: Options<T>): Promise<{ success: boolean; message: string }> => {
   try {
     await actionFn();
-    console.log("success");
     return {
       success: true,
       message: successMessage,
@@ -20,7 +19,6 @@ const executeAction = async <T>({
     if (isRedirectError(error)) {
       throw error;
     }
-    console.log("error", error);
     return {
       success: false,
       message: "An error has occurred during executing the action",

@@ -1,8 +1,4 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+// /src/lib/db/schema.prisma
 
 generator client {
   provider = "prisma-client-js"
@@ -40,6 +36,7 @@ model Team {
   phone1       String
   phone2       String
   backup       Boolean    @default(false)
+  groupCode    String?    // 🆕 Add this!
 
   matchesAsTeam1 Match[] @relation("Team1")
   matchesAsTeam2 Match[] @relation("Team2")
@@ -52,6 +49,7 @@ model Team {
   @@unique([tournamentId, civilId2])
   @@map("teams")
 }
+
 
 model User {
   id            String          @id @default(cuid())
@@ -127,13 +125,17 @@ model Authenticator {
 model Match {
   id           String  @id @default(cuid())
   tournamentId String
-  round        Int // 1 = Final, 2 = Semi, ...
-  matchNumber  Int
-  team1Id      String? // nullable until filled
+  round        Int // Round 1 = first, increases over time
+  matchNumber  Int // Index within the round
+  team1Id      String?
   team2Id      String?
   winnerId     String?
 
-  matchDate DateTime
+  startTime   DateTime? // Start time including date + hour
+  tableNumber Int? // Table (1-32)
+  groupCode   String? // e.g. "Day1-A", "Day2-B", "Finals"
+
+  matchDate DateTime // Retained for general calendar filtering
   createdAt DateTime @default(now())
 
   tournament Tournament @relation(fields: [tournamentId], references: [id])

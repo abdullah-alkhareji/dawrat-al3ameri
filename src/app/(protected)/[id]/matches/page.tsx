@@ -1,3 +1,5 @@
+// src/app/(protected)/[id]/matches/page.tsx
+
 import React from "react";
 import TournamentInfo from "../_components/tournament-info";
 import { redirect } from "next/navigation";
