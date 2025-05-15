@@ -13,7 +13,7 @@ function isValidTournamentDay(date: Date): boolean {
 
 function getNextValidTournamentDay(date: Date, allowSaturday = false): Date {
   const next = new Date(date);
-  next.setDate(date.getDate() + 1);
+  next.setDate(next.getDate() + 1);
   while (true) {
     const day = next.getDay();
     if (day === 4 || day === 5 || (allowSaturday && day === 6)) break;
@@ -35,17 +35,54 @@ export async function scheduleFullTournament({
   tableCount?: number;
   timeSlots?: string[];
 }): Promise<void> {
-  const totalGroups = teamCount / 32;
-  if (totalGroups % 1 !== 0) {
-    throw new Error("Team count must be divisible by 32");
+  // ✅ Allow any power of 2 (2–32) without needing to divide by 32
+  if (teamCount > 32 && teamCount % 32 !== 0) {
+    throw new Error("Team count above 32 must be divisible by 32");
   }
+
+  // ✅ Small tournaments (2–32 teams)
+  if (teamCount <= 32) {
+    const groupCode = "Day1-A";
+    const bracket = generateEmptyBracket(teamCount);
+    await saveBracketToDatabase(tournamentId, bracket, groupCode);
+
+    const matches = await prisma.match.findMany({
+      where: { tournamentId, groupCode },
+      orderBy: [{ round: "desc" }, { matchNumber: "asc" }],
+    });
+
+    const scheduled = scheduleSubTournamentMatches({
+      matches,
+      startDate,
+      timeSlots,
+      tableCount,
+    });
+
+    await prisma.$transaction(
+      scheduled.map((match) =>
+        prisma.match.update({
+          where: { id: match.id },
+          data: {
+            startTime: match.startTime,
+            matchDate: match.matchDate,
+            tableNumber: match.tableNumber,
+          },
+        })
+      )
+    );
+
+    console.log("✅ Small tournament scheduled.");
+    return;
+  }
+
+  // ✅ Large tournaments (teamCount > 32)
+  const totalGroups = teamCount / 32;
 
   let currentDay = new Date(startDate);
   let groupPerDay = 0;
   let dayCounter = 1;
   let groupCodeLetter = "A";
   let dayMatches: Match[] = [];
-
   let lastUsedDay = currentDay;
 
   for (let g = 0; g < totalGroups; g++) {
