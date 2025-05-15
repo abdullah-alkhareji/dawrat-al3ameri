@@ -47,7 +47,6 @@ export function FormModal() {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    console.log(formData);
     // Handle form submission
   };
 
@@ -106,7 +105,6 @@ export function FormModal() {
 export function ConfirmationModal() {
   const handleConfirm = () => {
     // Handle confirmation
-    console.log("Confirmed!");
   };
 
   return (
