@@ -7,6 +7,7 @@ import { z } from "zod";
 import prisma from "@/lib/prisma";
 import { applicationFormSchema } from "@/lib/scheemas";
 import { revalidatePath } from "next/cache";
+import { assignTeamToRandomMatch } from "@/lib/assign-team-to-random-match";
 
 export const createTeam = async (
   data: z.infer<typeof applicationFormSchema>,
@@ -66,73 +67,33 @@ export const createTeam = async (
 
     // Try to assign to a match if not a backup
     if (!isBackup) {
-      const highestRoundMatch = await prisma.match.findFirst({
-        where: { tournamentId },
-        orderBy: { round: "desc" },
+      const created = await prisma.team.create({
+        data: {
+          tournamentId,
+          teamNumber,
+          name1: data.name1,
+          name2: data.name2,
+          civilId1: data.civilId1,
+          civilId2: data.civilId2,
+          phone1: data.phone1,
+          phone2: data.phone2,
+          backup: false,
+          groupCode: null,
+        },
       });
 
-      if (highestRoundMatch) {
-        const firstRoundMatches = await prisma.match.findMany({
-          where: {
-            tournamentId,
-            round: highestRoundMatch.round,
-            OR: [{ team1Id: null }, { team2Id: null }],
-          },
-          select: {
-            id: true,
-            groupCode: true,
-            team1Id: true,
-            team2Id: true,
-          },
+      const groupCode = await assignTeamToRandomMatch({
+        tournamentId,
+        teamId: created.id,
+      });
+
+      if (groupCode) {
+        await prisma.team.update({
+          where: { id: created.id },
+          data: { groupCode },
         });
-
-        const grouped: Record<string, typeof firstRoundMatches> = {};
-        for (const match of firstRoundMatches) {
-          if (!match.groupCode) continue;
-          grouped[match.groupCode] ||= [];
-          grouped[match.groupCode].push(match);
-        }
-
-        const groupCodes = Object.keys(grouped);
-        if (groupCodes.length > 0) {
-          const randomGroup =
-            groupCodes[Math.floor(Math.random() * groupCodes.length)];
-          const matches = grouped[randomGroup];
-
-          const availableSlots = matches.flatMap((match) => {
-            const slots = [];
-            if (!match.team1Id)
-              slots.push({ matchId: match.id, slot: "team1Id" });
-            if (!match.team2Id)
-              slots.push({ matchId: match.id, slot: "team2Id" });
-            return slots;
-          });
-
-          if (availableSlots.length > 0) {
-            assignedGroupCode = randomGroup;
-            newTeam = await prisma.team.create({
-              data: {
-                tournamentId,
-                teamNumber,
-                name1: data.name1,
-                name2: data.name2,
-                civilId1: data.civilId1,
-                civilId2: data.civilId2,
-                phone1: data.phone1,
-                phone2: data.phone2,
-                backup: false,
-                groupCode: assignedGroupCode,
-              },
-            });
-
-            const randomSlot =
-              availableSlots[Math.floor(Math.random() * availableSlots.length)];
-            await prisma.match.update({
-              where: { id: randomSlot.matchId },
-              data: { [randomSlot.slot]: newTeam.id },
-            });
-          }
-        }
+        newTeam = created;
+        assignedGroupCode = groupCode;
       }
     }
 
@@ -159,7 +120,7 @@ export const createTeam = async (
     return { success: true, data: newTeam, groupCode: assignedGroupCode };
   } catch (error) {
     console.error("[TEAM_CREATE]", error);
-    return { success: false, error: "في مشكلة أثناء التسجيل" };
+    return { success: false, error: "في شي غلط" };
   }
 };
 
