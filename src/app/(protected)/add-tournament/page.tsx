@@ -1,3 +1,5 @@
+// src/app/(protected)/add-tournament/page.tsx
+
 import AddTournamentForm from "@/components/forms/add-tournament-form";
 import React from "react";
 import { Button } from "@/components/ui/button";

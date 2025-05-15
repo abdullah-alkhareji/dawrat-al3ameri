@@ -18,9 +18,9 @@ export const createTournament = async (
       data: {
         name: data.name,
         teamCount: data.teamCount,
+        tableCount: data.tableCount,
         location: data.location,
         startDate: data.startDate,
-        endDate: data.endDate,
         lastRegDate: data.lastRegDate,
       },
     });
@@ -30,7 +30,7 @@ export const createTournament = async (
       tournamentId: tournament.id,
       teamCount: tournament.teamCount,
       startDate: tournament.startDate,
-      tableCount: 16, // or 32 if needed
+      tableCount: tournament.tableCount,
     });
 
     // 4. Revalidate

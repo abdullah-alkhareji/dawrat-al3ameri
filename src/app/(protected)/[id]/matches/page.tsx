@@ -19,7 +19,6 @@ const MatchesPage = async ({ params }: MatchesPageProps) => {
   const { data: tournament, error: tournamentError } = await getTournament(id);
   const { data: matches, error } = await getMatchesByTournamentId(id);
 
-
   if (error || tournamentError) {
     redirect("/");
   }
@@ -27,6 +26,16 @@ const MatchesPage = async ({ params }: MatchesPageProps) => {
   if (!matches || !tournament) {
     redirect("/");
   }
+
+  if (matches.length === 0) {
+    return (
+      <div className="space-y-4">
+        <TournamentInfo tournament={tournament} id={id} />
+        <p className="text-muted-foreground">لا يوجد مباريات</p>
+      </div>
+    );
+  }
+
   return (
     <div className="space-y-4">
       <TournamentInfo tournament={tournament} id={id} />

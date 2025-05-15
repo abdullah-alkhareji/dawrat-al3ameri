@@ -18,9 +18,12 @@ import {
 import { executeAction } from "@/lib/executeAction";
 import { toast } from "sonner";
 import { loginSchema } from "@/lib/scheemas";
+import { useState } from "react";
+import { Loader2 } from "lucide-react";
 
 const LoginForm = () => {
   const router = useRouter();
+  const [isLoading, setIsLoading] = useState(false);
 
   const form = useForm<z.infer<typeof loginSchema>>({
     resolver: zodResolver(loginSchema),
@@ -31,6 +34,7 @@ const LoginForm = () => {
   });
 
   const handleSubmit = async (values: z.infer<typeof loginSchema>) => {
+    setIsLoading(true);
     const result = await executeAction({
       actionFn: async () =>
         await signIn("credentials", {
@@ -48,6 +52,7 @@ const LoginForm = () => {
       form.reset();
       router.refresh();
     }
+    setIsLoading(false);
   };
 
   return (
@@ -60,7 +65,12 @@ const LoginForm = () => {
             <FormItem className="space-y-2">
               <FormLabel>الايمل</FormLabel>
               <FormControl>
-                <Input {...field} type="email" autoComplete="email" />
+                <Input
+                  {...field}
+                  type="email"
+                  autoComplete="email"
+                  disabled={isLoading}
+                />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -77,14 +87,19 @@ const LoginForm = () => {
                   {...field}
                   type="password"
                   autoComplete="current-password"
+                  disabled={isLoading}
                 />
               </FormControl>
               <FormMessage />
             </FormItem>
           )}
         />
-        <Button className="w-full" type="submit">
-          تسجيل الدخول
+        <Button className="w-full" type="submit" disabled={isLoading}>
+          {isLoading ? (
+            <Loader2 className="size-4 animate-spin" />
+          ) : (
+            "تسجيل الدخول"
+          )}
         </Button>
       </form>
     </Form>

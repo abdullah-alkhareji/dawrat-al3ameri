@@ -83,7 +83,7 @@ function SelectButtonRoot({
   return (
     <div
       data-slot="select-button-root"
-      className="grid grid-cols-4 gap-2"
+      className="grid grid-cols-3 gap-2"
       {...props}
     >
       {React.Children.map(children, (child) => {

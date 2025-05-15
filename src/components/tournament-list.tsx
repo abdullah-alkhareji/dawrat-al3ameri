@@ -2,7 +2,6 @@ import React from "react";
 import { getTournaments } from "@/actions/tournament";
 import { Calendar, ChevronLeft } from "lucide-react";
 import Link from "next/link";
-import { Badge } from "./ui/badge";
 
 const TournamentList = async () => {
   const { data: tournaments, error } = await getTournaments();
@@ -26,26 +25,11 @@ const TournamentList = async () => {
               <div className="flex flex-col gap-2">
                 <div className="flex items-center gap-2">
                   <p className="text-lg font-bold">{tournament.name}</p>
-                  {tournament.teams?.length >= tournament.teamCount && (
-                    <Badge>فولت</Badge>
-                  )}
-                  {new Date() > tournament.lastRegDate &&
-                    new Date() < tournament.endDate && (
-                      <Badge>انتهى التسجيل</Badge>
-                    )}
-                  {new Date() < tournament.startDate &&
-                    new Date() > tournament.endDate && <Badge>بلشت</Badge>}
-                  {new Date() > tournament.endDate && <Badge>خلصت</Badge>}
                 </div>
                 <div className="flex items-center gap-2">
-                  <p className="text-xs flex items-center gap-2 text-muted-foreground">
+                  <p className="flex items-center gap-2 text-muted-foreground">
                     <Calendar className="size-4 text-primary" />
-                    مـن {tournament.startDate.toLocaleDateString()}
-                  </p>
-                  <span className="text-muted-foreground">-</span>
-                  <p className="text-xs flex items-center gap-2 text-muted-foreground">
-                    <Calendar className="size-4 text-primary" />
-                    لـي {tournament.endDate.toLocaleDateString()}
+                    {tournament.startDate.toLocaleDateString()}
                   </p>
                 </div>
               </div>
