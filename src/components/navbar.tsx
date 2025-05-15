@@ -14,7 +14,7 @@ const Navbar = ({ session }: { session?: Session | null }) => {
           className="flex items-center gap-2 hover:opacity-80 transition-opacity"
         >
           <AppLogo />
-          <h1 className="text-xl font-bold tracking-tight">
+          <h1 className="text-xl font-bold tracking-tight hidden lg:block">
             بطولة <span className="text-primary font-black">العميري</span>{" "}
             للبلوت
           </h1>
