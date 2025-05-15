@@ -1,6 +1,6 @@
 import Navbar from "@/components/navbar";
 import MobileNav from "@/components/mobile-nav";
-import AddTournamentButton from "@/components/add-tournament-button";
+import DesktopNav from "@/components/desktop-nav";
 import { auth } from "@/lib/auth";
 
 const ProtectedLayout = async ({ children }: { children: React.ReactNode }) => {
@@ -13,7 +13,7 @@ const ProtectedLayout = async ({ children }: { children: React.ReactNode }) => {
         {children}
       </main>
       <MobileNav />
-      <AddTournamentButton />
+      <DesktopNav />
     </div>
   );
 };
