@@ -29,7 +29,7 @@ export function ErrorPage({
   return (
     <div className="flex h-screen w-full flex-col items-center justify-center space-y-4 text-center">
       <div className="space-y-2">
-        <h1 className="text-4xl font-bold tracking-tighter">في شيل غلط!!</h1>
+        <h1 className="text-4xl font-bold tracking-tighter">في شي غلط!!</h1>
         <p className="text-muted-foreground">نعتذر عن الخطأ. جرب مرة ثانية.</p>
       </div>
       <div className="flex items-center gap-2">

@@ -136,6 +136,18 @@ export const getTeam = async (
       where: { id },
       include: {
         tournament: true,
+        matchesAsTeam1: {
+          include: {
+            team1: true,
+            team2: true,
+          },
+        },
+        matchesAsTeam2: {
+          include: {
+            team1: true,
+            team2: true,
+          },
+        },
       },
     });
 
