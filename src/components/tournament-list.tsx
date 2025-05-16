@@ -1,7 +1,6 @@
 import React from "react";
 import { getTournaments } from "@/actions/tournament";
 import { Trophy } from "lucide-react";
-import { Skeleton } from "@/components/ui/skeleton";
 import TournamentCard from "./tournament-card";
 
 const TournamentList = async () => {
@@ -30,34 +29,9 @@ const TournamentList = async () => {
   }
 
   return (
-    <div className="w-full flex flex-col gap-4">
+    <div className="w-full flex flex-col lg:grid lg:grid-cols-3 gap-4">
       {tournaments.map((tournament) => (
         <TournamentCard key={tournament.id} tournament={tournament} />
-      ))}
-    </div>
-  );
-};
-
-export const TournamentListSkeleton = () => {
-  return (
-    <div className="w-full flex flex-col gap-4">
-      {[1, 2, 3].map((i) => (
-        <div
-          key={i}
-          className="flex flex-col md:flex-row md:items-center justify-between gap-3 bg-card rounded-lg p-4 border border-muted"
-        >
-          <div className="flex items-start md:items-center gap-3">
-            <Skeleton className="hidden md:block size-12 rounded-full" />
-            <div className="flex flex-col gap-1 w-full">
-              <Skeleton className="h-6 w-48" />
-              <div className="flex flex-wrap items-center gap-x-4 gap-y-1 mt-1">
-                <Skeleton className="h-4 w-32" />
-                <Skeleton className="h-4 w-24" />
-              </div>
-            </div>
-          </div>
-          <Skeleton className="size-8 rounded-full self-end md:self-center ml-auto" />
-        </div>
       ))}
     </div>
   );

@@ -21,7 +21,7 @@ const TournamentCard = ({ tournament }: TournamentCardProps) => {
             <h3 className="text-lg font-bold group-hover:text-primary transition-colors">
               {tournament.name}
             </h3>
-            <div className="flex flex-col lg:flex-row items-start justify-start gap-x-4 gap-y-1 text-sm text-muted-foreground">
+            <div className="flex flex-col items-start justify-start gap-x-4 gap-y-1 text-sm text-muted-foreground">
               <p className="flex items-center gap-1">
                 <Calendar className="size-3.5 text-primary" />
                 {tournament.startDate.toLocaleDateString()}
