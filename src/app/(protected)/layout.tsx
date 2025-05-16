@@ -9,7 +9,7 @@ const ProtectedLayout = async ({ children }: { children: React.ReactNode }) => {
   return (
     <div className="min-h-screen flex flex-col bg-background">
       <Navbar session={session} />
-      <main className="flex-1 w-full max-w-screen-2xl mx-auto px-4 pt-4 pb-20 lg:pb-4">
+      <main className="flex-1 w-full max-w-screen-2xl mx-auto px-4 pt-4 pb-28 lg:pb-4">
         {children}
       </main>
       <MobileNav />
