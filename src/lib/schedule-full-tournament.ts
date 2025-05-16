@@ -6,19 +6,60 @@ import { saveBracketToDatabase } from "./save-bracket";
 import { scheduleSubTournamentMatches } from "./schedule-matches";
 import { Match } from "@prisma/client";
 
+// Use this function in getNextValidTournamentDay to determine if a day is valid
 function isValidTournamentDay(date: Date): boolean {
+  // Get the actual day of the week (0-6, 0 being Sunday)
   const day = date.getDay();
+
+  // Log the date and day for debugging
+  console.log(`[DATE_DEBUG] Checking if date is valid:`, {
+    date: date.toISOString(),
+    day,
+    dayName: [
+      "Sunday",
+      "Monday",
+      "Tuesday",
+      "Wednesday",
+      "Thursday",
+      "Friday",
+      "Saturday",
+    ][day],
+  });
+
+  // Thursday (4) or Friday (5)
   return day === 4 || day === 5;
 }
 
 function getNextValidTournamentDay(date: Date, allowSaturday = false): Date {
   const next = new Date(date);
   next.setDate(next.getDate() + 1);
+
+  console.log(
+    `[DATE_DEBUG] Finding next valid day after ${date.toISOString()}`
+  );
+
   while (true) {
     const day = next.getDay();
-    if (day === 4 || day === 5 || (allowSaturday && day === 6)) break;
+    const isValid = isValidTournamentDay(next) || (allowSaturday && day === 6);
+    if (isValid) {
+      console.log(`[DATE_DEBUG] Found valid day:`, {
+        date: next.toISOString(),
+        day,
+        dayName: [
+          "Sunday",
+          "Monday",
+          "Tuesday",
+          "Wednesday",
+          "Thursday",
+          "Friday",
+          "Saturday",
+        ][day],
+      });
+      break;
+    }
     next.setDate(next.getDate() + 1);
   }
+
   return next;
 }
 
@@ -54,6 +95,9 @@ export async function scheduleFullTournament({
     throw new Error("Invalid start date provided");
   }
 
+  // Ensure we're using a consistent date
+  const startDateCopy = new Date(startDate);
+
   // ✅ Small tournaments (2–32 teams)
   if (teamCount <= 32) {
     console.log(
@@ -73,7 +117,7 @@ export async function scheduleFullTournament({
 
     const scheduled = scheduleSubTournamentMatches({
       matches,
-      startDate,
+      startDate: startDateCopy,
       timeSlots,
       tableCount,
     });
@@ -104,7 +148,7 @@ export async function scheduleFullTournament({
   );
   const totalGroups = teamCount / 32;
 
-  let currentDay = new Date(startDate);
+  let currentDay = new Date(startDateCopy);
   let groupPerDay = 0;
   let dayCounter = 1;
   let groupCodeLetter = "A";
@@ -116,15 +160,24 @@ export async function scheduleFullTournament({
     currentDay.toISOString()
   );
 
+  // Always use the startDate for the first day, regardless of day of week
+  // This ensures consistent behavior in both environments
   for (let g = 0; g < totalGroups; g++) {
     if (groupPerDay === 0) {
-      currentDay = isValidTournamentDay(currentDay)
-        ? currentDay
-        : getNextValidTournamentDay(currentDay);
-      console.log(
-        `[TOURNAMENT_SCHEDULING] Using tournament day:`,
-        currentDay.toISOString()
-      );
+      if (g === 0) {
+        // For the first group, use the startDate directly
+        console.log(
+          `[TOURNAMENT_SCHEDULING] Using provided start date for first day:`,
+          currentDay.toISOString()
+        );
+      } else {
+        // For subsequent groups, find a valid day
+        currentDay = getNextValidTournamentDay(lastUsedDay);
+        console.log(
+          `[TOURNAMENT_SCHEDULING] Using tournament day:`,
+          currentDay.toISOString()
+        );
+      }
     }
 
     const groupCode = `Day${dayCounter}-${groupCodeLetter}`;
@@ -176,7 +229,7 @@ export async function scheduleFullTournament({
       groupPerDay = 0;
       groupCodeLetter = "A";
       dayCounter++;
-      currentDay = getNextValidTournamentDay(currentDay); // now safe to increment
+      currentDay = getNextValidTournamentDay(lastUsedDay); // now safe to increment
       dayMatches = [];
     }
   }

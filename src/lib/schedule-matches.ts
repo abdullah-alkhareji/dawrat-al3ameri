@@ -4,16 +4,55 @@ import { Match } from "@prisma/client";
 
 function isValidTournamentDay(date: Date, isFinal = false) {
   const day = date.getDay();
+  console.log(`[DATE_DEBUG] Is valid day check:`, {
+    date: date.toISOString(),
+    day,
+    dayName: [
+      "Sunday",
+      "Monday",
+      "Tuesday",
+      "Wednesday",
+      "Thursday",
+      "Friday",
+      "Saturday",
+    ][day],
+    result: day === 4 || day === 5 || (isFinal && day === 6),
+  });
   return day === 4 || day === 5 || (isFinal && day === 6);
 }
 
 function getNextTournamentDay(date: Date, isFinal = false): Date {
   const next = new Date(date);
   next.setDate(date.getDate() + 1);
+  console.log(
+    `[DATE_DEBUG] Finding next tournament day after:`,
+    date.toISOString()
+  );
   while (!isValidTournamentDay(next, isFinal)) {
     next.setDate(next.getDate() + 1);
   }
+  console.log(`[DATE_DEBUG] Next tournament day found:`, next.toISOString());
   return next;
+}
+
+// Helper function to create a consistent date-time object
+function createDateTime(baseDate: Date, timeString: string): Date {
+  // Parse the time string (format: "HH:MM")
+  const [hours, minutes] = timeString.split(":").map(Number);
+
+  // Create a new date object to avoid modifying the original
+  const dateTime = new Date(baseDate);
+
+  // Set hours and minutes, ensuring we use UTC methods for consistency
+  dateTime.setUTCHours(hours, minutes, 0, 0);
+
+  console.log(`[TIME_DEBUG] Created datetime:`, {
+    baseDate: baseDate.toISOString(),
+    timeString,
+    result: dateTime.toISOString(),
+  });
+
+  return dateTime;
 }
 
 export function scheduleSubTournamentMatches({
@@ -90,9 +129,10 @@ export function scheduleSubTournamentMatches({
           `[SCHEDULE_MATCHES] Group ${groups[g]} using time slot:`,
           timeSlot
         );
-        const [hour, minute] = timeSlot.split(":").map(Number);
-        const slotTime = new Date(currentDay);
-        slotTime.setHours(hour, minute, 0, 0);
+
+        // Create a consistent date time object
+        const slotTime = createDateTime(currentDay, timeSlot);
+
         console.log(
           `[SCHEDULE_MATCHES] Slot time set to:`,
           slotTime.toISOString()
@@ -108,9 +148,10 @@ export function scheduleSubTournamentMatches({
       }
     } else {
       console.log(`[SCHEDULE_MATCHES] Using single time slot for all matches`);
-      const [hour, minute] = timeSlots[0].split(":").map(Number);
-      const slotTime = new Date(currentDay);
-      slotTime.setHours(hour, minute, 0, 0);
+
+      // Create a consistent date time object
+      const slotTime = createDateTime(currentDay, timeSlots[0]);
+
       console.log(
         `[SCHEDULE_MATCHES] Slot time set to:`,
         slotTime.toISOString()
@@ -154,9 +195,10 @@ export function scheduleSubTournamentMatches({
 
         const timeSlot = timeSlots[slotIndex];
         console.log(`[SCHEDULE_MATCHES] Using time slot:`, timeSlot);
-        const [h, m] = timeSlot.split(":").map(Number);
-        const slotTime = new Date(matchDay);
-        slotTime.setHours(h, m, 0, 0);
+
+        // Create a consistent date time object
+        const slotTime = createDateTime(matchDay, timeSlot);
+
         console.log(
           `[SCHEDULE_MATCHES] Slot time set to:`,
           slotTime.toISOString()
