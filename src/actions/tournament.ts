@@ -13,6 +13,14 @@ export const createTournament = async (
   data: z.infer<typeof addTournamentSchema>
 ): Promise<{ success: boolean; data?: Tournament; error?: string }> => {
   try {
+    console.log(`📝 Starting tournament creation: ${data.name}`);
+    console.log(
+      `📝 Tournament details: ${data.teamCount} teams, ${data.tableCount} tables`
+    );
+    console.log(`📝 Location: ${data.location}`);
+    console.log(`📝 Start Date: ${data.startDate.toISOString()}`);
+    console.log(`📝 Last Registration Date: ${data.lastRegDate.toISOString()}`);
+
     // 1. Create tournament
     const tournament = await prisma.tournament.create({
       data: {
@@ -25,20 +33,29 @@ export const createTournament = async (
       },
     });
 
+    console.log(`📝 Tournament created with ID: ${tournament.id}`);
+
     // 2. Schedule full tournament
+    console.log(`📝 Starting tournament scheduling for ${tournament.name}`);
     await scheduleFullTournament({
       tournamentId: tournament.id,
       teamCount: tournament.teamCount,
       startDate: tournament.startDate,
       tableCount: tournament.tableCount,
     });
+    console.log(`📝 Tournament scheduling completed`);
 
     // 4. Revalidate
     revalidatePath("/tournaments");
+    console.log(`📝 Revalidated tournaments path`);
 
+    console.log(
+      `📝 Tournament creation successfully completed: ${tournament.name}`
+    );
     return { success: true, data: tournament };
   } catch (error) {
     console.error("[TOURNAMENT_CREATE]", error);
+    console.log(`❌ Tournament creation failed: ${error}`);
     return { success: false, error: "Failed to create tournament" };
   }
 };
