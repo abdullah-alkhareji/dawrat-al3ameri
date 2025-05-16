@@ -34,3 +34,27 @@ export function getTournamentStatus(
 
   return { status, statusColor };
 }
+
+/**
+ * Format match round number to appropriate Arabic names
+ */
+export function formatMatchRound(round: number): string {
+  switch (round) {
+    case 1:
+      return "النهائي";
+    case 2:
+      return "نصف النهائي";
+    case 3:
+      return "ربع النهائي";
+    case 4:
+      return "دور الـ 8";
+    case 5:
+      return "دور الـ 16";
+    case 6:
+      return "دور الـ 32";
+    case 7:
+      return "دور الـ 64";
+    default:
+      return `الجولة ${round}`;
+  }
+}

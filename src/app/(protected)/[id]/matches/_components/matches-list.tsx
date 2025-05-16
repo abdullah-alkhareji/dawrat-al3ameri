@@ -14,6 +14,9 @@ import {
 } from "@/components/ui/accordion";
 import { format } from "date-fns";
 import { arSA } from "date-fns/locale";
+import { Badge } from "@/components/ui/badge";
+import { formatMatchRound } from "@/lib/utils";
+import { cn } from "@/lib/utils";
 
 export type MatchWithTeams = Match & {
   team1: Team | null;
@@ -47,72 +50,136 @@ function groupMatches(matches: MatchWithTeams[]) {
     }, {} as Record<string, Record<string, Record<number, MatchWithTeams[]>>>);
 }
 
+// Helper function to sort groups alphabetically
+function getSortedGroups(
+  groups: Record<string, Record<number, MatchWithTeams[]>>
+): [string, Record<number, MatchWithTeams[]>][] {
+  return Object.entries(groups).sort(([groupA], [groupB]) => {
+    // Extract any numbers from the group codes for proper sorting
+    const groupACode = groupA.replace(/[^A-Za-z0-9]/g, "");
+    const groupBCode = groupB.replace(/[^A-Za-z0-9]/g, "");
+    return groupACode.localeCompare(groupBCode);
+  });
+}
+
 const MatchesList = ({ matches }: MatchesListProps) => {
+  // Group all matches first
   const grouped = groupMatches(matches);
-  const days = Object.keys(grouped);
+  const days = Object.keys(grouped).reverse();
 
   return (
-    <Tabs defaultValue={days.reverse()[0]} className="space-y-4">
-      <TabsList
-        className="flex flex-nowrap w-full overflow-x-auto flex-row-reverse"
-        dir="rtl"
-      >
-        {days.reverse().map((day) => (
-          <TabsTrigger
+    <div className="space-y-4">
+      <Tabs defaultValue={days[0]} className="space-y-4" dir="rtl">
+        <div className="relative overflow-hidden">
+          <TabsList
+            className="flex flex-nowrap w-full overflow-x-auto bg-muted/70 py-2 px-1 rounded-lg no-scrollbar"
+            dir="rtl"
+          >
+            {days.map((day, i) => {
+              // Format the day to make it more mobile-friendly
+              const dateParts = day.split(" ");
+              const dayName = dateParts[0];
+              const dateValue = dateParts[1];
+
+              return (
+                <TabsTrigger
+                  key={day}
+                  value={day}
+                  className={cn(
+                    "whitespace-nowrap text-right rounded-md min-w-[100px] data-[state=active]:bg-background data-[state=active]:shadow",
+                    i === 0 && "mr-1"
+                  )}
+                >
+                  <div className="flex flex-col text-xs">
+                    <span className="font-bold">{dayName}</span>
+                    <span className="text-muted-foreground">{dateValue}</span>
+                  </div>
+                </TabsTrigger>
+              );
+            })}
+          </TabsList>
+        </div>
+
+        {days.map((day) => (
+          <TabsContent
+            dir="rtl"
             key={day}
             value={day}
-            className="whitespace-nowrap text-right"
+            className="space-y-8 p-0"
           >
-            {day}
-          </TabsTrigger>
-        ))}
-      </TabsList>
+            {getSortedGroups(grouped[day]).map(([groupCode, rounds]) => {
+              // Check if there are any matches in this group
+              const hasMatchesInGroup = Object.values(rounds).some(
+                (matchesArray: MatchWithTeams[]) => matchesArray.length > 0
+              );
 
-      {days.map((day) => (
-        <TabsContent dir="rtl" key={day} value={day} className="space-y-6">
-          {Object.entries(grouped[day])
-            .reverse()
-            .map(([groupCode, rounds]) => (
-              <div key={groupCode} className="space-y-4">
-                <h3 className="text-lg font-semibold text-muted-foreground">
-                  مجموعة {groupCode.replace("Day", "اليوم ")}
-                </h3>
-                <Accordion type="multiple" className="w-full">
-                  {Object.entries(rounds)
-                    .reverse()
-                    .map(([roundNum, matches], index) => (
-                      <AccordionItem
-                        key={roundNum}
-                        value={`round-${groupCode}-${roundNum}`}
-                      >
-                        <AccordionTrigger>
-                          {+roundNum === 1
-                            ? "النهائي"
-                            : +roundNum === 2
-                            ? "نصف النهائي"
-                            : +roundNum === 3
-                            ? "ربع النهائي"
-                            : `الجولة ${index + 1}`}
-                        </AccordionTrigger>
-                        <AccordionContent>
-                          <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
-                            {matches.map((match) => (
-                              <MatchCard
-                                key={match.id}
-                                match={match}
-                                round={index + 1}
-                              />
-                            ))}
-                          </div>
-                        </AccordionContent>
-                      </AccordionItem>
-                    ))}
-                </Accordion>
-              </div>
-            ))}
-        </TabsContent>
-      ))}
-    </Tabs>
+              if (!hasMatchesInGroup) {
+                return null;
+              }
+
+              return (
+                <div
+                  key={groupCode}
+                  className="space-y-4 bg-muted/30 p-4 rounded-lg"
+                >
+                  <h3 className="text-lg font-semibold text-primary">
+                    مجموعة {groupCode.replace("Day", "اليوم ")}
+                  </h3>
+                  <Accordion type="multiple" className="w-full">
+                    {Object.entries(rounds)
+                      .reverse()
+                      .map(
+                        ([roundNum, roundMatches]: [
+                          string,
+                          MatchWithTeams[]
+                        ]) => {
+                          if (roundMatches.length === 0) {
+                            return null;
+                          }
+
+                          return (
+                            <AccordionItem
+                              key={roundNum}
+                              value={`round-${groupCode}-${roundNum}`}
+                              className="border-b border-muted-foreground/20 last:border-0"
+                            >
+                              <AccordionTrigger className="hover:bg-muted/50 px-3 rounded-md">
+                                <div className="flex items-center gap-2">
+                                  <span>{formatMatchRound(+roundNum)}</span>
+                                  {
+                                    // number available teams
+                                    roundMatches.filter(
+                                      (match) => match.winnerId
+                                    ).length >= roundMatches.length && (
+                                      <Badge
+                                        variant="outline"
+                                        className="text-xs"
+                                      >
+                                        انتهت
+                                      </Badge>
+                                    )
+                                  }
+                                </div>
+                              </AccordionTrigger>
+                              <AccordionContent className="pt-4">
+                                <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
+                                  {roundMatches.map((match) => (
+                                    <MatchCard key={match.id} match={match} />
+                                  ))}
+                                </div>
+                              </AccordionContent>
+                            </AccordionItem>
+                          );
+                        }
+                      )}
+                  </Accordion>
+                </div>
+              );
+            })}
+          </TabsContent>
+        ))}
+      </Tabs>
+    </div>
   );
 };
 

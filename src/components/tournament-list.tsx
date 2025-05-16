@@ -1,6 +1,6 @@
 import React from "react";
 import { getTournaments } from "@/actions/tournament";
-import { Trophy, CalendarX } from "lucide-react";
+import { CalendarX } from "lucide-react";
 import TournamentCard from "./tournament-card";
 import { Card, CardContent } from "@/components/ui/card";
 
