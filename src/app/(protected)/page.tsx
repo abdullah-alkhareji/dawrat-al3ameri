@@ -12,24 +12,24 @@ const DashboardPage = async () => {
   }
 
   return (
-    <div className="container mx-auto space-y-6">
-      {/* Welcome Header Section */}
-      <section className="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-4 pb-2 border-b">
-        <div>
-          <h1 className="text-3xl font-bold text-primary">
-            هلا {session.user?.name}
-          </h1>
-          <p className="text-muted-foreground mt-1">ولكم بالك</p>
+    <div className="w-full mx-auto max-w-screen-2xl flex flex-col gap-6">
+      {/* Header */}
+      <div className="bg-primary/5 rounded-lg p-4">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+          <div>
+            <h1 className="text-2xl font-bold">هلا {session.user?.name}</h1>
+            <div className="flex items-center gap-2 mt-2">
+              <span className="text-sm text-muted-foreground">ولكم بالك</span>
+            </div>
+          </div>
         </div>
-        <div className="flex items-center gap-3"></div>
-      </section>
+      </div>
 
-      {/* Dashboard Content */}
-      {/* Main Tournament List */}
-      <div className="space-y-4">
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-6">
+      {/* Main Tournament List Section */}
+      <div>
+        <div className="flex items-center justify-between mb-4">
           <div className="flex items-center gap-2">
-            <Trophy className="size-5 text-primary" />
+            <Trophy className="h-5 w-5 text-primary" />
             <h2 className="text-xl font-semibold">البطولات المتاحة</h2>
           </div>
         </div>
