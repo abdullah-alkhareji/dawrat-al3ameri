@@ -35,13 +35,30 @@ export async function scheduleFullTournament({
   tableCount?: number;
   timeSlots?: string[];
 }): Promise<void> {
+  console.log(`[TOURNAMENT_SCHEDULING] Starting with params:`, {
+    tournamentId,
+    teamCount,
+    startDate: startDate.toISOString(),
+    tableCount,
+    timeSlots,
+  });
+
   // ✅ Allow any power of 2 (2–32) without needing to divide by 32
   if (teamCount > 32 && teamCount % 32 !== 0) {
     throw new Error("Team count above 32 must be divisible by 32");
   }
 
+  // Check if startDate is a valid Date object
+  if (!(startDate instanceof Date) || isNaN(startDate.getTime())) {
+    console.error(`[TOURNAMENT_SCHEDULING] Invalid startDate:`, startDate);
+    throw new Error("Invalid start date provided");
+  }
+
   // ✅ Small tournaments (2–32 teams)
   if (teamCount <= 32) {
+    console.log(
+      `[TOURNAMENT_SCHEDULING] Processing small tournament (${teamCount} teams)`
+    );
     const groupCode = "Day1-A";
     const bracket = generateEmptyBracket(teamCount);
     await saveBracketToDatabase(tournamentId, bracket, groupCode);
@@ -50,6 +67,9 @@ export async function scheduleFullTournament({
       where: { tournamentId, groupCode },
       orderBy: [{ round: "desc" }, { matchNumber: "asc" }],
     });
+    console.log(
+      `[TOURNAMENT_SCHEDULING] Found ${matches.length} matches to schedule`
+    );
 
     const scheduled = scheduleSubTournamentMatches({
       matches,
@@ -57,6 +77,9 @@ export async function scheduleFullTournament({
       timeSlots,
       tableCount,
     });
+    console.log(
+      `[TOURNAMENT_SCHEDULING] Scheduled ${scheduled.length} matches`
+    );
 
     await prisma.$transaction(
       scheduled.map((match) =>
@@ -76,6 +99,9 @@ export async function scheduleFullTournament({
   }
 
   // ✅ Large tournaments (teamCount > 32)
+  console.log(
+    `[TOURNAMENT_SCHEDULING] Processing large tournament (${teamCount} teams)`
+  );
   const totalGroups = teamCount / 32;
 
   let currentDay = new Date(startDate);
@@ -85,14 +111,24 @@ export async function scheduleFullTournament({
   let dayMatches: Match[] = [];
   let lastUsedDay = currentDay;
 
+  console.log(
+    `[TOURNAMENT_SCHEDULING] Large tournament initial currentDay:`,
+    currentDay.toISOString()
+  );
+
   for (let g = 0; g < totalGroups; g++) {
     if (groupPerDay === 0) {
       currentDay = isValidTournamentDay(currentDay)
         ? currentDay
         : getNextValidTournamentDay(currentDay);
+      console.log(
+        `[TOURNAMENT_SCHEDULING] Using tournament day:`,
+        currentDay.toISOString()
+      );
     }
 
     const groupCode = `Day${dayCounter}-${groupCodeLetter}`;
+    console.log(`[TOURNAMENT_SCHEDULING] Creating group: ${groupCode}`);
     const bracket = generateEmptyBracket(32);
     await saveBracketToDatabase(tournamentId, bracket, groupCode);
 
@@ -100,6 +136,9 @@ export async function scheduleFullTournament({
       where: { tournamentId, groupCode },
       orderBy: [{ round: "desc" }, { matchNumber: "asc" }],
     });
+    console.log(
+      `[TOURNAMENT_SCHEDULING] Found ${matches.length} matches for group ${groupCode}`
+    );
 
     dayMatches.push(...matches);
 
@@ -109,6 +148,9 @@ export async function scheduleFullTournament({
     const isLastGroup = g === totalGroups - 1;
 
     if (groupPerDay === 2 || isLastGroup) {
+      console.log(
+        `[TOURNAMENT_SCHEDULING] Scheduling day ${dayCounter} with ${dayMatches.length} matches`
+      );
       const scheduled = scheduleSubTournamentMatches({
         matches: dayMatches,
         startDate: currentDay,
@@ -141,6 +183,9 @@ export async function scheduleFullTournament({
 
   // ✅ Create Grand Finals if needed
   if (totalGroups > 1) {
+    console.log(
+      `[TOURNAMENT_SCHEDULING] Creating Grand Finals bracket for ${totalGroups} groups`
+    );
     const finalBracket = generateEmptyBracket(totalGroups);
     const finalGroupCode = "Finals";
     await saveBracketToDatabase(tournamentId, finalBracket, finalGroupCode);
@@ -149,9 +194,16 @@ export async function scheduleFullTournament({
       where: { tournamentId, groupCode: finalGroupCode },
       orderBy: [{ round: "desc" }, { matchNumber: "asc" }],
     });
+    console.log(
+      `[TOURNAMENT_SCHEDULING] Found ${finalMatches.length} matches for finals`
+    );
 
     // ✅ Force finals to Saturday (even if it's not the immediate next day)
     const finalDay = getNextValidTournamentDay(lastUsedDay, true); // Saturday is allowed
+    console.log(
+      `[TOURNAMENT_SCHEDULING] Finals day set to:`,
+      finalDay.toISOString()
+    );
 
     const scheduledFinals = scheduleSubTournamentMatches({
       matches: finalMatches,
@@ -173,4 +225,6 @@ export async function scheduleFullTournament({
       )
     );
   }
+
+  console.log(`[TOURNAMENT_SCHEDULING] Tournament scheduling complete`);
 }
