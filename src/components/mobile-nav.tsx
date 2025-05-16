@@ -11,7 +11,7 @@ const MobileNav = () => {
   const isActive = (path: string) => pathname === path;
 
   return (
-    <nav className="block lg:hidden fixed bottom-0 left-0 right-0 z-40 border-t border-border/40 bg-background/80 backdrop-blur-md shadow-md">
+    <nav className="block lg:hidden fixed bottom-0 left-0 right-0 z-40 border-t border-border/40 bg-background/80 backdrop-blur-md shadow-md pb-8">
       <div className="flex h-16 items-center justify-around px-4 flex-row-reverse">
         <NavItem
           href="/"
