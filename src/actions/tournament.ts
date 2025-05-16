@@ -12,25 +12,8 @@ import { scheduleFullTournament } from "@/lib/schedule-full-tournament";
 export const createTournament = async (
   data: z.infer<typeof addTournamentSchema>
 ): Promise<{ success: boolean; data?: Tournament; error?: string }> => {
-  console.log(`[TOURNAMENT_CREATE] Starting with data:`, {
-    name: data.name,
-    teamCount: data.teamCount,
-    tableCount: data.tableCount,
-    startDate:
-      data.startDate instanceof Date
-        ? data.startDate.toISOString()
-        : data.startDate,
-  });
-
   try {
-    // Validate startDate
-    if (!(data.startDate instanceof Date) || isNaN(data.startDate.getTime())) {
-      console.error(`[TOURNAMENT_CREATE] Invalid startDate:`, data.startDate);
-      return { success: false, error: "Invalid start date provided" };
-    }
-
     // 1. Create tournament
-    console.log(`[TOURNAMENT_CREATE] Creating tournament record`);
     const tournament = await prisma.tournament.create({
       data: {
         name: data.name,
@@ -41,49 +24,22 @@ export const createTournament = async (
         lastRegDate: data.lastRegDate,
       },
     });
-    console.log(
-      `[TOURNAMENT_CREATE] Tournament created with ID:`,
-      tournament.id
-    );
 
     // 2. Schedule full tournament
-    try {
-      console.log(`[TOURNAMENT_CREATE] Calling scheduleFullTournament`);
-      await scheduleFullTournament({
-        tournamentId: tournament.id,
-        teamCount: tournament.teamCount,
-        startDate: tournament.startDate,
-        tableCount: tournament.tableCount,
-      });
-      console.log(
-        `[TOURNAMENT_CREATE] Tournament scheduling completed successfully`
-      );
-    } catch (scheduleError) {
-      console.error(`[TOURNAMENT_CREATE] Scheduling error:`, scheduleError);
-      // Still return success since the tournament was created
-      return {
-        success: true,
-        data: tournament,
-        error: `Tournament created but scheduling failed: ${
-          scheduleError instanceof Error
-            ? scheduleError.message
-            : String(scheduleError)
-        }`,
-      };
-    }
+    await scheduleFullTournament({
+      tournamentId: tournament.id,
+      teamCount: tournament.teamCount,
+      startDate: tournament.startDate,
+      tableCount: tournament.tableCount,
+    });
 
     // 4. Revalidate
     revalidatePath("/tournaments");
 
     return { success: true, data: tournament };
   } catch (error) {
-    console.error("[TOURNAMENT_CREATE] Error:", error);
-    return {
-      success: false,
-      error: `Failed to create tournament: ${
-        error instanceof Error ? error.message : String(error)
-      }`,
-    };
+    console.error("[TOURNAMENT_CREATE]", error);
+    return { success: false, error: "Failed to create tournament" };
   }
 };
 
