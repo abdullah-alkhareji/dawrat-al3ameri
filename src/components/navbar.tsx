@@ -7,16 +7,19 @@ import { Session } from "next-auth";
 
 const Navbar = ({ session }: { session?: Session | null }) => {
   return (
-    <header className="sticky top-0 z-50 w-full bg-card border-b px-4 py-4">
-      <div className="w-full max-w-screen-2xl mx-auto flex h-14 items-center ">
-        <Link href="/" className="flex items-center gap-2">
+    <header className="sticky top-0 z-50 w-full bg-background/80 backdrop-blur-md border-b border-border/40 shadow-sm">
+      <div className="w-full max-w-screen-2xl mx-auto flex h-16 items-center px-4">
+        <Link
+          href="/"
+          className="flex items-center gap-2 hover:opacity-80 transition-opacity"
+        >
           <AppLogo />
-          <h1 className="text-xl font-bold tracking-tight">
+          <h1 className="text-xl font-bold tracking-tight hidden lg:block">
             بطولة <span className="text-primary font-black">العميري</span>{" "}
             للبلوت
           </h1>
         </Link>
-        <div className="flex flex-1 items-center justify-end gap-2">
+        <div className="flex flex-1 items-center justify-end space-x-3">
           <ModeToggle />
           {session?.user && <LogoutButton />}
         </div>

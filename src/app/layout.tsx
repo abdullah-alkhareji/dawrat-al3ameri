@@ -1,8 +1,9 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Cairo } from "next/font/google";
 import "./globals.css";
 import { ThemeProvider } from "@/components/theme-provider";
 import { Toaster } from "@/components/ui/sonner";
+import { ErrorBoundary } from "@/components/error-boundary";
 
 const cairo = Cairo({
   subsets: ["arabic"],
@@ -11,9 +12,43 @@ const cairo = Cairo({
   display: "swap",
 });
 
+export const viewport: Viewport = {
+  themeColor: [
+    { media: "(prefers-color-scheme: light)", color: "white" },
+    { media: "(prefers-color-scheme: dark)", color: "black" },
+  ],
+  width: "device-width",
+  initialScale: 1,
+};
+
 export const metadata: Metadata = {
   title: "بطولة العميري للبلوت",
-  description: "بطولة العميري للبلوت",
+  description: "منصة لإدارة بطولات البلوت وتنظيم المباريات والفرق والجوائز",
+  keywords: ["بلوت", "بطولة", "العميري", "كويت", "سعودية", "مسابقات", "كارت"],
+  authors: [{ name: "Abdullah AlKhareji" }],
+  creator: "Abdullah AlKhareji",
+  publisher: "Abdullah AlKhareji",
+  formatDetection: {
+    email: true,
+    telephone: true,
+  },
+  icons: {
+    icon: [
+      { url: "/favicon.ico" },
+      {
+        url: "/assets/PNG/logo-black.png",
+        sizes: "16x16",
+        type: "image/png",
+      },
+      {
+        url: "/assets/PNG/logo-black.png",
+        sizes: "32x32",
+        type: "image/png",
+      },
+    ],
+    apple: [{ url: "/assets/PNG/logo-black.png", sizes: "180x180" }],
+  },
+  manifest: "/site.webmanifest",
 };
 
 export default function RootLayout({
@@ -23,19 +58,21 @@ export default function RootLayout({
 }>) {
   return (
     <html
-      lang="en"
+      lang="ar"
       dir="rtl"
       suppressHydrationWarning
       className={cairo.variable}
     >
-      <body className={`${cairo.className} antialiased`}>
+      <body className={`${cairo.className} antialiased min-h-screen`}>
         <ThemeProvider
           attribute="class"
           defaultTheme="dark"
           disableTransitionOnChange
         >
-          <Toaster />
-          {children}
+          <ErrorBoundary>
+            <Toaster />
+            <main className="flex flex-col min-h-screen">{children}</main>
+          </ErrorBoundary>
         </ThemeProvider>
       </body>
     </html>

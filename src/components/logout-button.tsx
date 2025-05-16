@@ -12,7 +12,12 @@ const LogoutButton = () => {
 
   return (
     <div>
-      <Button onClick={handleLogout} variant="default" size="icon">
+      <Button
+        onClick={handleLogout}
+        variant="ghost"
+        size="icon"
+        className="text-destructive"
+      >
         <LogOutIcon className="w-4 h-4" />
       </Button>
     </div>

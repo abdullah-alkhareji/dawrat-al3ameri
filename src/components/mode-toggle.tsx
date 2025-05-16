@@ -24,8 +24,9 @@ const ModeToggle = () => {
   return (
     <Button
       onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
-      variant="secondary"
+      variant="ghost"
       size="icon"
+      className="text-foreground"
     >
       {theme === "dark" ? <MoonIcon /> : <SunIcon />}
     </Button>
