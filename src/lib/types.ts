@@ -15,3 +15,8 @@ export type TeamWithMatches = Team & {
     team2: Team;
   })[];
 };
+
+export type TournamentWithTeamsAndMatches = Tournament & {
+  teams: Team[];
+  matches: Match[];
+};

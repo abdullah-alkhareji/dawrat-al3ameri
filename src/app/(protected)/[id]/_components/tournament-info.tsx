@@ -2,37 +2,52 @@
 
 import { ArrowLeft, Calendar } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Tournament } from "@prisma/client";
+import { TournamentWithTeamsAndMatches } from "@/lib/types";
 import Link from "next/link";
-import React from "react";
+import { Badge } from "@/components/ui/badge";
+import { formatDate, getTournamentStatus } from "@/lib/utils";
 
 type TournamentInfoProps = {
-  tournament: Tournament;
+  tournament: TournamentWithTeamsAndMatches;
   id: string;
 };
 
 const TournamentInfo = ({ tournament, id }: TournamentInfoProps) => {
-  return (
-    <div className="flex flex-col gap-2 col-span-1 bg-card p-4 rounded-lg">
-      <div className="flex items-center justify-between">
-        <h1 className="text-xl font-bold">البطولة</h1>
+  const teamsRegistered = tournament?.teams?.length || 0;
+  const { status: registrationStatus, statusColor } = getTournamentStatus(
+    teamsRegistered,
+    tournament?.teamCount || 0
+  );
 
-        <Button variant="ghost" size="icon">
-          <Link href={`/${id}`}>
-            <ArrowLeft className="size-6" />
-          </Link>
-        </Button>
+  // Format date in Arabic style
+  const formattedDate = formatDate(tournament?.startDate);
+
+  return (
+    <div className="bg-primary/5 rounded-lg p-4 flex items-center justify-between">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+        <div>
+          <h1 className="text-2xl font-bold">{tournament?.name}</h1>
+          <div className="flex items-center gap-2 mt-1">
+            <Calendar className="h-4 w-4 text-primary" />
+            <span className="text-sm text-muted-foreground">
+              {formattedDate}
+            </span>
+          </div>
+        </div>
+        <div className="flex items-center gap-2 mt-2 sm:mt-0">
+          <Badge className={`${statusColor} text-white`}>
+            {registrationStatus}
+          </Badge>
+          <Badge variant="outline">
+            {teamsRegistered} / {tournament?.teamCount}
+          </Badge>
+        </div>
       </div>
-      <p className="text-foreground ">
-        اسم البطولة:{" "}
-        <span className="text-muted-foreground">{tournament?.name}</span>
-      </p>
-      <div className="flex items-center gap-2">
-        <p className="text-sm text-muted-foreground flex items-center gap-2">
-          <Calendar className="size-4 text-primary" />
-          {tournament?.startDate.toLocaleDateString()}
-        </p>
-      </div>
+      <Button variant="ghost" size="icon" asChild>
+        <Link href={`/${id}`}>
+          <ArrowLeft className="size-5" />
+        </Link>
+      </Button>
     </div>
   );
 };
