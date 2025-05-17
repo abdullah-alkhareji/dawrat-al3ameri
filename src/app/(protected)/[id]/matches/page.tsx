@@ -54,7 +54,7 @@ const MatchesPage = async ({ params }: MatchesPageProps) => {
             مباريات البطولة
           </CardTitle>
         </CardHeader>
-        <CardContent>
+        <CardContent className="px-2 md:px-4 py-0">
           {!matches || matches.length === 0 ? (
             <EmptyState tournamentId={id} />
           ) : (
