@@ -1,7 +1,10 @@
 import React from "react";
 import Link from "next/link";
-import { Calendar, ChevronLeft, Trophy, Users, MapPin } from "lucide-react";
+import { Calendar, ChevronLeft, Trophy, Users } from "lucide-react";
 import { Tournament, Team } from "@prisma/client";
+import { Badge } from "@/components/ui/badge";
+import { Card, CardContent } from "@/components/ui/card";
+import { formatDate, getTournamentStatus } from "@/lib/utils";
 
 interface TournamentCardProps {
   tournament: Tournament & {
@@ -10,43 +13,51 @@ interface TournamentCardProps {
 }
 
 const TournamentCard = ({ tournament }: TournamentCardProps) => {
+  const teamsRegistered = tournament.teams?.length || 0;
+  const { status: registrationStatus, statusColor } = getTournamentStatus(
+    teamsRegistered,
+    tournament.teamCount
+  );
+
+  // Format date using utility function
+  const formattedDate = formatDate(tournament.startDate);
+
   return (
-    <Link href={`/${tournament.id}`} className="group">
-      <div className="w-full flex items-center justify-between gap-3 bg-card hover:bg-card/80 rounded-lg p-4 border border-muted transition-all duration-200 hover:shadow-md">
-        <div className="flex items-center gap-3">
-          <div className="hidden md:flex size-12 rounded-full bg-primary/10 items-center justify-center">
-            <Trophy className="size-6 text-primary" />
-          </div>
-          <div className="flex flex-col gap-1">
-            <h3 className="text-lg font-bold group-hover:text-primary transition-colors">
-              {tournament.name}
-            </h3>
-            <div className="flex flex-col lg:flex-row items-start justify-start gap-x-4 gap-y-1 text-sm text-muted-foreground">
-              <p className="flex items-center gap-1">
-                <Calendar className="size-3.5 text-primary" />
-                {tournament.startDate.toLocaleDateString()}
-              </p>
-              {tournament.location && (
-                <p className="flex items-center justify-start gap-1">
-                  <MapPin className="size-3.5 text-primary" />
-                  <span className="overflow-clip max-w-40 text-ellipsis">
-                    {tournament.location}
-                  </span>
-                </p>
-              )}
-              {tournament.teamCount && (
-                <p className="flex items-center gap-1">
-                  <Users className="size-3.5 text-primary" />
-                  {tournament.teamCount} فريق
-                </p>
-              )}
+    <Link href={`/${tournament.id}`} className="block">
+      <Card className="h-full transition-all hover:shadow-md hover:border-primary/20">
+        <CardContent className="">
+          <div className="flex justify-between items-center gap-3">
+            <div className="flex flex-col gap-3 flex-grow">
+              <div className="flex items-center gap-2">
+                <div className="size-8 rounded-full bg-primary/10 flex items-center justify-center">
+                  <Trophy className="size-4 text-primary" />
+                </div>
+                <h3 className="text-lg font-semibold">{tournament.name}</h3>
+              </div>
+
+              <div className="flex flex-wrap gap-2 mt-1">
+                <Badge variant="outline" className="flex items-center gap-1">
+                  <Calendar className="size-3" />
+                  {formattedDate}
+                </Badge>
+                <Badge variant="outline" className="flex items-center gap-1">
+                  <Users className="size-3" />
+                  {teamsRegistered} / {tournament.teamCount}
+                </Badge>
+                <Badge
+                  className={`${statusColor} text-white flex items-center gap-1`}
+                >
+                  {registrationStatus}
+                </Badge>
+              </div>
+            </div>
+
+            <div className="shrink size-8 rounded-full bg-primary/10 flex items-center justify-center hover:bg-primary transition-colors group">
+              <ChevronLeft className="size-4 text-primary group-hover:text-white" />
             </div>
           </div>
-        </div>
-        <div className="size-8 rounded-full bg-primary/10 flex items-center justify-center group-hover:bg-primary transition-colors duration-200">
-          <ChevronLeft className="size-4 text-primary group-hover:text-white" />
-        </div>
-      </div>
+        </CardContent>
+      </Card>
     </Link>
   );
 };

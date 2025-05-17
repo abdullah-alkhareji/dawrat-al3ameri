@@ -1,63 +1,42 @@
 import React from "react";
 import { getTournaments } from "@/actions/tournament";
-import { Trophy } from "lucide-react";
-import { Skeleton } from "@/components/ui/skeleton";
+import { CalendarX } from "lucide-react";
 import TournamentCard from "./tournament-card";
+import { Card, CardContent } from "@/components/ui/card";
 
 const TournamentList = async () => {
   const { data: tournaments, error } = await getTournaments();
 
   if (error) {
     return (
-      <div className="p-4 bg-destructive/10 text-destructive rounded-lg border border-destructive/20">
-        <p>{error}</p>
-      </div>
+      <Card className="border-destructive/20">
+        <CardContent className="p-4 text-destructive">
+          <p>{error}</p>
+        </CardContent>
+      </Card>
     );
   }
 
   if (!tournaments || tournaments.length === 0) {
     return (
-      <div className="flex flex-col items-center justify-center p-8 bg-muted/30 rounded-lg border border-dashed">
-        <Trophy className="size-12 text-muted-foreground mb-2 opacity-20" />
-        <p className="text-muted-foreground text-center">
-          لا توجد بطولات متاحة حالياً
-        </p>
-        <p className="text-muted-foreground text-center text-sm mt-1">
-          سيتم إضافة بطولات جديدة قريباً
-        </p>
-      </div>
+      <Card className="border-dashed bg-muted/30">
+        <CardContent className="flex flex-col items-center justify-center p-8">
+          <CalendarX className="size-12 text-muted-foreground mb-3 opacity-20" />
+          <h3 className="text-lg font-medium text-muted-foreground text-center">
+            لا توجد بطولات متاحة حالياً
+          </h3>
+          <p className="text-muted-foreground text-center text-sm mt-1">
+            سيتم إضافة بطولات جديدة قريباً
+          </p>
+        </CardContent>
+      </Card>
     );
   }
 
   return (
-    <div className="w-full flex flex-col gap-4">
+    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
       {tournaments.map((tournament) => (
         <TournamentCard key={tournament.id} tournament={tournament} />
-      ))}
-    </div>
-  );
-};
-
-export const TournamentListSkeleton = () => {
-  return (
-    <div className="w-full flex flex-col gap-4">
-      {[1, 2, 3].map((i) => (
-        <div
-          key={i}
-          className="flex flex-col md:flex-row md:items-center justify-between gap-3 bg-card rounded-lg p-4 border border-muted"
-        >
-          <div className="flex items-start md:items-center gap-3">
-            <Skeleton className="hidden md:block size-12 rounded-full" />
-            <div className="flex flex-col gap-1 w-full">
-              <Skeleton className="h-6 w-48" />
-              <div className="flex flex-wrap items-center gap-x-4 gap-y-1 mt-1">
-                <Skeleton className="h-4 w-32" />
-                <Skeleton className="h-4 w-24" />
-              </div>
-            </div>
-          </div>
-          <Skeleton className="size-8 rounded-full self-end md:self-center ml-auto" />
-        </div>
       ))}
     </div>
   );

@@ -28,7 +28,11 @@ const ModeToggle = () => {
       size="icon"
       className="text-foreground"
     >
-      {theme === "dark" ? <MoonIcon /> : <SunIcon />}
+      {theme === "dark" ? (
+        <MoonIcon className="size-5" />
+      ) : (
+        <SunIcon className="size-5" />
+      )}
     </Button>
   );
 };

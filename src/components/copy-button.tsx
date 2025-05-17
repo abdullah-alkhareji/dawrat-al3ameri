@@ -2,36 +2,37 @@
 
 import React from "react";
 import { Button } from "./ui/button";
-import { Copy } from "lucide-react";
+import { Copy, Check } from "lucide-react";
 import { toast } from "sonner";
+import { useCopyToClipboard } from "@/hooks/use-component-state";
+import { cn } from "@/lib/utils";
+
 interface CopyButtonProps {
   text: string;
+  className?: string;
 }
 
-const CopyButton = ({ text }: CopyButtonProps) => {
+const CopyButton = ({ text, className }: CopyButtonProps) => {
+  const { copied, copy } = useCopyToClipboard();
+
   const handleCopy = () => {
-    // Create a temporary input element
-    const tempInput = document.createElement("input");
-    tempInput.value = text;
-    document.body.appendChild(tempInput);
-
-    // Select and copy the text
-    tempInput.select();
-    tempInput.setSelectionRange(0, 99999); // For mobile devices
-    document.execCommand("copy");
-
-    // Clean up
-    document.body.removeChild(tempInput);
+    copy(text);
     toast.success("تم النسخ");
   };
 
   return (
     <div>
-      <Button variant="ghost" size="icon" onClick={handleCopy}>
-        <Copy className="size-3" />
+      <Button
+        variant="ghost"
+        size="icon"
+        onClick={handleCopy}
+        className={cn(className)}
+      >
+        {copied ? <Check className="size-4" /> : <Copy className="size-4" />}
       </Button>
     </div>
   );
 };
 
 export default CopyButton;
+export type { CopyButtonProps };

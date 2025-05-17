@@ -8,7 +8,7 @@ import { z } from "zod";
 import { addTournamentSchema } from "@/lib/scheemas";
 import { Tournament, Team } from "@prisma/client";
 import { scheduleFullTournament } from "@/lib/schedule-full-tournament";
-
+import { TournamentWithTeamsAndMatches } from "@/lib/types";
 export const createTournament = async (
   data: z.infer<typeof addTournamentSchema>
 ): Promise<{ success: boolean; data?: Tournament; error?: string }> => {
@@ -85,13 +85,13 @@ export const getTournament = async (
   id: string
 ): Promise<{
   success: boolean;
-  data?: (Tournament & { teams: Team[] }) | null;
+  data?: TournamentWithTeamsAndMatches | null;
   error?: string;
 }> => {
   try {
     const tournament = await prisma.tournament.findUnique({
       where: { id },
-      include: { teams: true },
+      include: { teams: true, matches: true },
     });
     return { success: true, data: tournament };
   } catch (error) {

@@ -18,7 +18,7 @@ const LogoutButton = () => {
         size="icon"
         className="text-destructive"
       >
-        <LogOutIcon className="w-4 h-4" />
+        <LogOutIcon className="size-5" />
       </Button>
     </div>
   );

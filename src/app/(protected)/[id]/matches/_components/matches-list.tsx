@@ -2,117 +2,208 @@
 
 "use client";
 
-import React from "react";
-import { Match, Team } from "@prisma/client";
+import React, { useEffect, useState } from "react";
 import MatchCard from "./match-card";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
-  Accordion,
-  AccordionContent,
-  AccordionItem,
-  AccordionTrigger,
-} from "@/components/ui/accordion";
-import { format } from "date-fns";
-import { arSA } from "date-fns/locale";
-
-export type MatchWithTeams = Match & {
-  team1: Team | null;
-  team2: Team | null;
-  winner: Team | null;
-};
+  formatMatchRound,
+  groupMatches,
+  getDayGroups,
+  getGroupRounds,
+  cn,
+} from "@/lib/utils";
+import {
+  Select,
+  SelectItem,
+  SelectContent,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { Calendar, Loader2, Users, ListFilter } from "lucide-react";
+import { Card, CardContent } from "@/components/ui/card";
+import { MatchDay, MatchWithTeams, Group, Round } from "@/lib/types";
 
 type MatchesListProps = {
   matches: MatchWithTeams[];
 };
 
-function groupMatches(matches: MatchWithTeams[]) {
-  return matches
-    .sort(
-      (a, b) =>
-        new Date(b.matchDate).getTime() - new Date(a.matchDate).getTime()
-    )
-    .reduce((acc, match) => {
-      const day = format(new Date(match.matchDate), "EEEE dd/MM/yyyy", {
-        locale: arSA,
-      });
-      const group = match.groupCode || "Unknown Group";
-      const round = match.round;
-
-      acc[day] ||= {};
-      acc[day][group] ||= {};
-      acc[day][group][round] ||= [];
-      acc[day][group][round].push(match);
-
-      return acc;
-    }, {} as Record<string, Record<string, Record<number, MatchWithTeams[]>>>);
-}
-
 const MatchesList = ({ matches }: MatchesListProps) => {
-  const grouped = groupMatches(matches);
-  const days = Object.keys(grouped);
+  const [selectedDay, setSelectedDay] = useState<string | null>(null);
+  const [selecterMatcheDay, setSelecterMatcheDay] = useState<MatchDay | null>(
+    null
+  );
+  const [selectedGroup, setSelectedGroup] = useState<string | null>(null);
+  const [groups, setGroups] = useState<Group[]>([]);
+
+  const [selectedRound, setSelectedRound] = useState<number | null>(null);
+  const [rounds, setRounds] = useState<Round[]>([]);
+
+  const [isLoading, setIsLoading] = useState(true);
+
+  const matchDays = groupMatches(matches);
+  const days = matchDays.map((day) => day.day);
+
+  useEffect(() => {
+    if (days.length > 0) {
+      setSelectedDay(days[0]);
+    }
+    setIsLoading(false);
+  }, []);
+
+  useEffect(() => {
+    setIsLoading(true);
+    if (selectedDay) {
+      const matchDay = matchDays.find((day) => day.day === selectedDay);
+      if (matchDay) {
+        setSelecterMatcheDay(matchDay);
+        setGroups(getDayGroups(matchDay));
+      }
+    }
+    setIsLoading(false);
+  }, [selectedDay]);
+
+  useEffect(() => {
+    if (groups.length > 0) {
+      setSelectedGroup(groups[0].groupCode);
+      // Initialize rounds based on the first group
+      const initialRounds = getGroupRounds(groups[0]);
+      setRounds(initialRounds);
+
+      // Initialize selectedRound with the first round if available
+      if (initialRounds.length > 0) {
+        setSelectedRound(initialRounds[0].roundNumber);
+      }
+    }
+  }, [groups]);
+
+  const handleDayChange = (value: string) => {
+    setIsLoading(true);
+    setSelectedDay(value);
+    setSelecterMatcheDay(matchDays.find((day) => day.day === value) || null);
+    setIsLoading(false);
+  };
+
+  const handleGroupChange = (value: string) => {
+    setSelectedGroup(value);
+    setRounds(
+      getGroupRounds(groups.find((group) => group.groupCode === value) || null)
+    );
+  };
+
+  const handleRoundChange = (value: string) => {
+    setSelectedRound(Number(value));
+  };
+
+  if (isLoading) {
+    return (
+      <div className="flex justify-center items-center p-8">
+        <Loader2 className="size-6 animate-spin text-primary" />
+      </div>
+    );
+  }
 
   return (
-    <Tabs defaultValue={days.reverse()[0]} className="space-y-4">
-      <TabsList
-        className="flex flex-nowrap w-full overflow-x-auto flex-row-reverse"
-        dir="rtl"
-      >
-        {days.reverse().map((day) => (
-          <TabsTrigger
-            key={day}
-            value={day}
-            className="whitespace-nowrap text-right"
-          >
-            {day}
-          </TabsTrigger>
-        ))}
-      </TabsList>
-
-      {days.map((day) => (
-        <TabsContent dir="rtl" key={day} value={day} className="space-y-6">
-          {Object.entries(grouped[day])
-            .reverse()
-            .map(([groupCode, rounds]) => (
-              <div key={groupCode} className="space-y-4">
-                <h3 className="text-lg font-semibold text-muted-foreground">
-                  مجموعة {groupCode.replace("Day", "اليوم ")}
-                </h3>
-                <Accordion type="multiple" className="w-full">
-                  {Object.entries(rounds)
-                    .reverse()
-                    .map(([roundNum, matches], index) => (
-                      <AccordionItem
-                        key={roundNum}
-                        value={`round-${groupCode}-${roundNum}`}
-                      >
-                        <AccordionTrigger>
-                          {+roundNum === 1
-                            ? "النهائي"
-                            : +roundNum === 2
-                            ? "نصف النهائي"
-                            : +roundNum === 3
-                            ? "ربع النهائي"
-                            : `الجولة ${index + 1}`}
-                        </AccordionTrigger>
-                        <AccordionContent>
-                          <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
-                            {matches.map((match) => (
-                              <MatchCard
-                                key={match.id}
-                                match={match}
-                                round={index + 1}
-                              />
-                            ))}
-                          </div>
-                        </AccordionContent>
-                      </AccordionItem>
-                    ))}
-                </Accordion>
+    <div className="space-y-6">
+      <Card className="bg-primary/5 border-primary/10">
+        <CardContent className="px-2 py-0">
+          <div className="flex flex-col sm:flex-row gap-5">
+            <div className="flex-1 flex flex-col gap-2">
+              <div className="flex items-center gap-2">
+                <Calendar className="size-4 text-primary" />
+                <span className="text-sm font-medium">اليوم</span>
               </div>
-            ))}
-        </TabsContent>
-      ))}
-    </Tabs>
+              <Select
+                defaultValue={selectedDay ?? undefined}
+                onValueChange={(e) => handleDayChange(e)}
+              >
+                <SelectTrigger className="w-full bg-white">
+                  <SelectValue placeholder="اختر اليوم" />
+                </SelectTrigger>
+                <SelectContent>
+                  {days.map((day) => (
+                    <SelectItem key={day} value={day}>
+                      {day}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+
+            <div className="flex-1 flex flex-col gap-2">
+              <div className="flex items-center gap-2">
+                <Users className="size-4 text-primary" />
+                <span className="text-sm font-medium">المجموعة</span>
+              </div>
+              <Select
+                value={selectedGroup ?? undefined}
+                onValueChange={(e) => handleGroupChange(e)}
+              >
+                <SelectTrigger className="w-full bg-white">
+                  <SelectValue placeholder="اختر المجموعة" />
+                </SelectTrigger>
+                <SelectContent>
+                  {groups.map((group) => (
+                    <SelectItem key={group.groupCode} value={group.groupCode}>
+                      {group.groupCode}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+
+            <div className="flex-1 flex flex-col gap-2">
+              <div className="flex items-center gap-2">
+                <ListFilter className="size-4 text-primary" />
+                <span className="text-sm font-medium">الدور</span>
+              </div>
+              <Select
+                value={selectedRound?.toString() ?? undefined}
+                onValueChange={(e) => handleRoundChange(e)}
+              >
+                <SelectTrigger className="w-full bg-white">
+                  <SelectValue placeholder="اختر الدور" />
+                </SelectTrigger>
+                <SelectContent>
+                  {rounds.map((round) => (
+                    <SelectItem
+                      key={round.roundNumber}
+                      value={round.roundNumber.toString()}
+                    >
+                      {formatMatchRound(+round.roundNumber)}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
+
+      <div
+        className={cn("grid grid-cols-1 gap-4", {
+          "opacity-50": isLoading,
+          "md:grid-cols-1": selectedRound === 1,
+          "md:grid-cols-2": selectedRound !== 1,
+        })}
+      >
+        {selecterMatcheDay?.groups
+          .filter((group) => group.groupCode === selectedGroup)
+          .map((group) => (
+            <React.Fragment key={group.groupCode}>
+              {group.rounds
+                .filter((round) => round.roundNumber === selectedRound)
+                .map((round) => (
+                  <React.Fragment key={round.roundNumber}>
+                    {round.matches
+                      .filter((match) => match.round === selectedRound)
+                      .map((match) => (
+                        <MatchCard key={match.id} match={match} />
+                      ))}
+                  </React.Fragment>
+                ))}
+            </React.Fragment>
+          ))}
+      </div>
+    </div>
   );
 };
 

@@ -96,7 +96,21 @@ export function useCopyToClipboard() {
 
   const copy = useCallback(async (text: string) => {
     try {
-      await navigator.clipboard.writeText(text);
+      // Check if running in browser environment
+      if (typeof navigator !== "undefined" && navigator.clipboard) {
+        await navigator.clipboard.writeText(text);
+      } else {
+        // Fallback for environments without clipboard API
+        const textArea = document.createElement("textarea");
+        textArea.value = text;
+        textArea.style.position = "absolute";
+        textArea.style.left = "-999999px";
+        document.body.appendChild(textArea);
+        textArea.select();
+        document.execCommand("copy");
+        document.body.removeChild(textArea);
+      }
+
       setCopied(true);
 
       if (timeoutRef.current) {
